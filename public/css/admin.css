@@ -1,0 +1,37 @@
+.__rule_header , .__rule_list li {
+	background: #11b5d1;
+	display: inline-block;
+	position: relative;
+}
+.__rule_header span, .__rule_list li span {
+	float: left;
+	padding: 7px;
+}
+
+.__rule_header {
+	width: 200px;
+}
+.__rule_header button {
+	float: right;
+}
+
+.__rule_container button {
+	border-radius: unset;
+}
+
+.__rule_list {
+	margin: 10px;
+	padding: 0;
+	list-style: none;
+}
+.__rule_list li {
+	cursor: pointer;
+	background-color: #c1d130;
+	width: 140px;
+}
+.__rule_list li span {
+	width: calc(100% - 34px);
+}
+.__rule_list li button {
+	float: right;
+}

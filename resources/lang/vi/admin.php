@@ -1,0 +1,127 @@
+<?php
+
+return [
+    'online'                => 'Online',
+    'login'                 => 'Đăng nhập',
+    'logout'                => 'Đăng xuất',
+    'setting'               => 'Cài đặt',
+    'name'                  => 'Tên',
+    'username'              => 'Tên người dùng',
+    'password'              => 'Mật khẩu',
+    'password_confirmation' => 'Xác nhận mật khẩu',
+    'remember_me'           => 'Nhớ tôi',
+    'user_setting'          => 'Cài đặt người dùng',
+    'avatar'                => 'Avatar',
+
+    'list'         => 'Danh sách',
+    'new'          => 'Thêm mới',
+    'create'       => 'Tạo',
+    'delete'       => 'Xóa',
+    'remove'       => 'Loại bỏ',
+    'edit'         => 'Sửa',
+    'view'         => 'View',
+    'browse'       => 'Tổng hợp',
+    'reset'        => 'Khởi tạo lại',
+    'export'       => 'Xuất',
+    'batch_delete' => 'Batch delete',
+    'save'         => 'Lưu',
+    'refresh'      => 'Làm mới',
+    'order'        => 'Đặt',
+    'expand'       => 'Mở rộng',
+    'collapse'     => 'Gom',
+    'filter'       => 'Lọc',
+    'close'        => 'Đóng',
+    'show'         => 'Mở',
+    'entries'      => 'Các chỉ mục',
+    'captcha'      => 'Captcha',
+
+    'action'            => 'Hành động',
+    'title'             => 'Tiêu đề',
+    'slug'              => 'Không dấu',
+    'description'       => 'Mô tả',
+    'back'              => 'Quay lại',
+    'back_to_list'      => 'Quay lại danh sách',
+    'submit'            => 'Đăng',
+    'menu'              => 'Menu',
+    'input'             => 'Đầu vào',
+    'succeeded'         => 'Đã thành công',
+    'failed'            => 'Đã thất bại',
+    'delete_confirm'    => 'Bạn có chắc là muốn xóa không ?',
+    'delete_succeeded'  => 'Xóa thành công !',
+    'delete_failed'     => 'Xóa thất bại !',
+    'update_succeeded'  => 'Cập nhật thành công !',
+    'save_succeeded'    => 'Lưu thành công !',
+    'refresh_succeeded' => 'Làm tươi thành công !',
+    'login_successful'  => 'Đăng nhập thành công',
+
+    'choose'       => 'Lựa chọn',
+    'choose_file'  => 'Chọn tập tin',
+    'choose_image' => 'Chọn hình ảnh',
+
+    'more' => 'Nhiều hơn',
+    'deny' => 'Cho phép thất bại',
+
+    'administrator' => 'Quản trị viên',
+    'roles'         => 'Các Vai trò',
+    'permissions'   => 'Các quyền',
+    'slug'          => 'Không dấu',
+
+    'created_at' => 'Được tạo tại',
+    'updated_at' => 'Được cập nhật tại',
+
+    'alert' => 'Báo động',
+
+    'parent_id' => 'Cha',
+    'icon'      => 'Icon',
+    'uri'       => 'URI',
+
+    'operation_log'       => 'Nhật ký hoạt động',
+    'parent_select_error' => 'Lỗi lựa chọn cha',
+
+    'pagination' => [
+        'range' => 'Hiển thị từ đầu tới cuối',
+    ],
+
+    'role'       => 'Vai trò',
+    'permission' => 'Quyền',
+    'route'      => 'Đường dẫn',
+    'confirm'    => 'Xác nhận',
+    'cancel'     => 'Hủy bỏ',
+
+    'http' => [
+        'method' => 'Phương thức HTTP',
+        'path'   => 'Đường HTTP',
+    ],
+    'all_methods_if_empty' => 'Tất cả các phương thức nếu trống',
+
+    'all'           => 'Tất cả',
+    'current_page'  => 'Trang hiện tại',
+    'selected_rows' => 'Hàng được lựa chọn',
+
+    'upload'     => 'Đăng',
+    'new_folder' => 'Thư mục mới',
+    'time'       => 'Thời gian',
+    'size'       => 'kích cỡ',
+
+    'listbox' => [
+        'text_total'         => 'Hiển thị tất cả {0}',
+        'text_empty'         => 'Danh sách trống',
+        'filtered'           => '{0} / {1}',
+        'filter_clear'       => 'Hiển thị tất cả',
+        'filter_placeholder' => 'Lọc',
+    ],
+
+    'language' => 'Ngôn ngữ',
+    'vi' => 'Tiếng việt',
+    'localeCurrent' => 'Ngôn ngữ hiện tại',
+    'image' => 'Hình ảnh Upload', 
+    'categories' => 'Các thể loại',
+    'jsCode' => 'Mã Code JS',
+    'basicInfo' => 'Thông tin cơ bản',
+    'advanceInfo' => 'Thông tin nâng cao',
+    'content' => 'Nội dung',
+    'required_setting' => 'Yêu cầu nhập',
+    'view' => 'View', 
+    'shared' => 'Share',
+    'view_result' => 'View face'
+];
