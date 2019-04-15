@@ -31,18 +31,29 @@ class frontController extends Controller
     public function homePage()
     {
         $this->postRepo->loadTrending();
-        $this->postRepo->loadFeaturePosts();
+        //$this->postRepo->loadFeaturePosts();
         $this->postRepo->loadLatest();
         $this->postRepo->loadPopular();
 
+        $feature = $this->dataRepo->loadTypedNews(4, 'feature');
         $newsflash = $this->dataRepo->loadTypedNews(7, 'newsflash');
         $editor_pick = $this->dataRepo->loadTypedNews(7, 'editor_pick');
-        $recommended = $this->dataRepo->loadTypedNews(7, 'recommended');
-
+        $recommended = $this->dataRepo->loadTypedNews(2, 'recommended');
+        view()->share('feature' , $feature);
         view()->share('newsflash' , $newsflash);
         view()->share('editor_pick' , $editor_pick);
         view()->share('recommended' , $recommended);
     	return view('Frontend.Home');
+    }
+    /**
+     * [ajaxPaginate load nes by paginate for ajax request]
+     * @param [integer] $[page] [number of page need to load]
+     * @param [string] $[load_type] [Type of the news need to load (homepage , list , detail)]
+     * @return [object] []
+     */
+    public function ajaxPaginate($page , $load_type = 'homepage')
+    {
+        
     }
 
     /**
@@ -55,7 +66,7 @@ class frontController extends Controller
         $this->postRepo->loadPopular();
         $cateDb = Category::whereTranslation('slug' , $category)->firstOrFail();
         $postsByCat = $cateDb->posts()->paginate(8);
-        dump($postsByCat);
+        //dump($postsByCat);
     	return view('Frontend.List' , compact('postsByCat' , 'cateDb'));
     }
 
@@ -81,9 +92,10 @@ class frontController extends Controller
     public function singlePost($slug , $id)
     {
         $this->postRepo->loadPopular();
-        $postDb = Post::where('id' , $id)->whereTranslation('slug' , $slug);
+        $postDb = Post::where('id' , $id)->whereTranslation('slug' , $slug)->first();
+        $cateDb = $postDb->categories();
         #$commentList , $relatedPosts , $postsNavigation
-    	return view('Frontend.Single' , compact('postDb'));
+    	return view('Frontend.Single' , compact('postDb' , 'cateDb'));
     } 
     /**
      * [singlePage load a specific page]

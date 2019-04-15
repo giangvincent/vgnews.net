@@ -38,7 +38,7 @@ class DataRepo extends Controller
 	public function loadTypedNews($num = 7, $typed = '')
 	{
 		return Post::whereHas('translations', function($q) use ($typed){
-		    $q->where('locale' , \App::getLocale())->where($typed , 1)->orderBy('id', 'desc');
+		    $q->where($typed , 1)->orderBy('id', 'desc');
 		})->publish()->take($num)->get();
 
 	}

@@ -63,19 +63,26 @@ class PostRepo extends Controller
 	 */
 	public function loadLatest()
 	{
-		$latestPostByCat = [];
+		
+
+		// get 20 latest post 
 		$latestPosts = Post::whereNotIn('id' , $this->loaded_ids)->whereHas('translations', function($q){
-		    $q->where('locale' , \App::getLocale())->orderBy('id' , 'desc');
+		    $q->orderBy('id' , 'desc');
 		})->take(20);
+		// post load only one time
 		array_push($this->loaded_ids, $latestPosts->pluck('id'));
+		$catsNews = array();
 		foreach ($latestPosts->get() as $post) {
 			$catsOfPost = $post->categories()->get();
+			$firstCat = $post->categories()->first();
+			$catsNews[$firstCat->slug]['cat'] = $firstCat;
 			foreach ($catsOfPost as $cat) {
-				$catsOfPost[$cat->title][] = $post;
+				$catsNews[$firstCat->slug]['post'][] = $post;
 			}
 		}
 		//dump($latestPostByCat);
-		view()->share('latestPostByCat' , $latestPostByCat);
+		view()->share('catsNews' , $catsNews);
+		view()->share('latestPosts' , $latestPosts->get());
 		view()->share('loaded_ids' , $this->loaded_ids);
 	}
 
@@ -86,7 +93,7 @@ class PostRepo extends Controller
 	public function loadPopular()
 	{
 		$popular = Post::whereNotIn('id' , $this->loaded_ids)->whereHas('translations', function($q){
-		    $q->where('locale' , \App::getLocale())->orderBy('count_view' , 'desc');
+		    $q->orderBy('count_view' , 'desc');
 		})->take(4);
 		array_push($this->loaded_ids, $popular->pluck('id'));
 		view()->share('popular' , $popular->get());

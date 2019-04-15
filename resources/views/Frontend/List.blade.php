@@ -1,7 +1,7 @@
 @extends('Frontend.Layouts.Master')
 
 @section('Header')
-<title>The list</title>
+<title>{{ $cateDb->title }} | VGNEWS.NET</title>
 @endsection
 
 @section('Main_content')
@@ -33,13 +33,13 @@
           <h1 class="page-title">{{ $cateDb->title }}</h1>
 
           <div class="row card-row">
-            @foreach($postsByCat as $post)
+            @foreach($postsByCat as $news)
             <div class="col-md-6">
               <article class="entry card">
                 <div class="entry__img-holder card__img-holder">
-                  <a href="p/{{ $post->slug }}_{{ $post->id }}.html">
+                  <a href="{{ route('front.detailPage' , ['slug' => $news->slug, 'id' => $news->id]) }}">
                     <div class="thumb-container thumb-70">
-                      <img data-src="{{ (filter_var($post->media, FILTER_VALIDATE_URL)) ? $post->media : 'upload/'.$post->media }}" src="img/empty.png" class="entry__img lazyload" alt="" />
+                      <img data-src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }}" src="img/empty.png" class="entry__img lazyload" alt="{{ $news->slug }}" />
                     </div>
                   </a>
                   <a href="#" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--violet">world</a>
@@ -49,20 +49,20 @@
                   <div class="entry__header">
                     
                     <h2 class="entry__title">
-                      <a href="single-post.html">{{ $post->title }}</a>
+                      <a href="{{ route('front.detailPage' , ['slug' => $news->slug, 'id' => $news->id]) }}">{{ $news->title }}</a>
                     </h2>
                     <ul class="entry__meta">
-                      <li class="entry__meta-author">
+                      <!-- <li class="entry__meta-author">
                         <span>by</span>
                         <a href="#">DeoThemes</a>
-                      </li>
+                      </li> -->
                       <li class="entry__meta-date">
-                        Jan 21, 2018
+                        {{ date("M d, Y", strtotime($news->updated_at)) }}
                       </li>
                     </ul>
                   </div>
                   <div class="entry__excerpt">
-                    <p>{{ $post->description }}</p>
+                    <p>{{ $news->description }}</p>
                   </div>
                 </div>
               </article>
@@ -71,180 +71,43 @@
           </div>
 
           <!-- Pagination -->
+          @if ($postsByCat->lastPage() > 1)
           <nav class="pagination">
-            <span class="pagination__page pagination__page--current">1</span>
-            <a href="#" class="pagination__page">2</a>
+            
+            @for ($i = 1; $i <= $postsByCat->lastPage(); $i++)
+                  
+                  <a href="{{ $postsByCat->url($i) }}" class="pagination__page {{ ($postsByCat->currentPage() == $i) ? 'pagination__page--current' : '' }}">{{ $i }}</a>
+              @endfor
+            <!-- <a href="#" class="pagination__page">2</a>
             <a href="#" class="pagination__page">3</a>
-            <a href="#" class="pagination__page">4</a>
-            <a href="#" class="pagination__page pagination__icon pagination__page--next"><i class="ui-arrow-right"></i></a>
+            <a href="#" class="pagination__page">4</a> -->
+            <a href="{{ $postsByCat->url($postsByCat->currentPage()+1) }}" class="pagination__page pagination__icon pagination__page--next"><i class="ui-arrow-right"></i></a>
           </nav>
+          {{-- <ul class="pagination">
+              <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">
+                  <a href="{{ $paginator->url(1) }}">Previous</a>
+              </li>
+              @for ($i = 1; $i <= $paginator->lastPage(); $i++)
+                  <li class="{{ ($paginator->currentPage() == $i) ? ' active' : '' }}">
+                      <a href="{{ $paginator->url($i) }}">{{ $i }}</a>
+                  </li>
+              @endfor
+              <li class="{{ ($paginator->currentPage() == $paginator->lastPage()) ? ' disabled' : '' }}">
+                  <a href="{{ $paginator->url($paginator->currentPage()+1) }}" >Next</a>
+              </li>
+          </ul> --}}
+          @endif
+          
         </div> <!-- end posts -->
 
         <!-- Sidebar -->
         <aside class="col-lg-4 sidebar sidebar--right">
 
-          <!-- Widget Popular Posts -->
-          <aside class="widget widget-popular-posts">
-            <h4 class="widget-title">Popular Posts</h4>
-            <ul class="post-list-small">
-              <li class="post-list-small__item">
-                <article class="post-list-small__entry clearfix">
-                  <div class="post-list-small__img-holder">
-                    <div class="thumb-container thumb-100">
-                      <a href="single-post.html">
-                        <img data-src="img/content/post_small/post_small_1.jpg" src="img/empty.png" alt="" class=" lazyload">
-                      </a>
-                    </div>
-                  </div>
-                  <div class="post-list-small__body">
-                    <h3 class="post-list-small__entry-title">
-                      <a href="single-post.html">Follow These Smartphone Habits of Successful Entrepreneurs</a>
-                    </h3>
-                    <ul class="entry__meta">
-                      <li class="entry__meta-author">
-                        <span>by</span>
-                        <a href="#">DeoThemes</a>
-                      </li>
-                      <li class="entry__meta-date">
-                        Jan 21, 2018
-                      </li>
-                    </ul>
-                  </div>                  
-                </article>
-              </li>
-              <li class="post-list-small__item">
-                <article class="post-list-small__entry clearfix">
-                  <div class="post-list-small__img-holder">
-                    <div class="thumb-container thumb-100">
-                      <a href="single-post.html">
-                        <img data-src="img/content/post_small/post_small_2.jpg" src="img/empty.png" alt="" class=" lazyload">
-                      </a>
-                    </div>
-                  </div>
-                  <div class="post-list-small__body">
-                    <h3 class="post-list-small__entry-title">
-                      <a href="single-post.html">Lose These 12 Bad Habits If You're Serious About Becoming a Millionaire</a>
-                    </h3>
-                    <ul class="entry__meta">
-                      <li class="entry__meta-author">
-                        <span>by</span>
-                        <a href="#">DeoThemes</a>
-                      </li>
-                      <li class="entry__meta-date">
-                        Jan 21, 2018
-                      </li>
-                    </ul>
-                  </div>                  
-                </article>
-              </li>
-              <li class="post-list-small__item">
-                <article class="post-list-small__entry clearfix">
-                  <div class="post-list-small__img-holder">
-                    <div class="thumb-container thumb-100">
-                      <a href="single-post.html">
-                        <img data-src="img/content/post_small/post_small_3.jpg" src="img/empty.png" alt="" class=" lazyload">
-                      </a>
-                    </div>
-                  </div>
-                  <div class="post-list-small__body">
-                    <h3 class="post-list-small__entry-title">
-                      <a href="single-post.html">June in Africa: Taxi wars, smarter cities and increased investments</a>
-                    </h3>
-                    <ul class="entry__meta">
-                      <li class="entry__meta-author">
-                        <span>by</span>
-                        <a href="#">DeoThemes</a>
-                      </li>
-                      <li class="entry__meta-date">
-                        Jan 21, 2018
-                      </li>
-                    </ul>
-                  </div>                  
-                </article>
-              </li>
-              <li class="post-list-small__item">
-                <article class="post-list-small__entry clearfix">
-                  <div class="post-list-small__img-holder">
-                    <div class="thumb-container thumb-100">
-                      <a href="single-post.html">
-                        <img data-src="img/content/post_small/post_small_4.jpg" src="img/empty.png" alt="" class=" lazyload">
-                      </a>
-                    </div>
-                  </div>
-                  <div class="post-list-small__body">
-                    <h3 class="post-list-small__entry-title">
-                      <a href="single-post.html">PUBG Desert Map Finally Revealed, Here Are All The Details</a>
-                    </h3>
-                    <ul class="entry__meta">
-                      <li class="entry__meta-author">
-                        <span>by</span>
-                        <a href="#">DeoThemes</a>
-                      </li>
-                      <li class="entry__meta-date">
-                        Jan 21, 2018
-                      </li>
-                    </ul>
-                  </div>                  
-                </article>
-              </li>
-            </ul>           
-          </aside> <!-- end widget popular posts -->
+          @include('Frontend.Partials.Content.V1.Sidebar.PopularPosts')
 
-          <!-- Widget Newsletter -->
-          <aside class="widget widget_mc4wp_form_widget">
-            <h4 class="widget-title">Newsletter</h4>
-            <p class="newsletter__text">
-              <i class="ui-email newsletter__icon"></i>
-              Subscribe for our daily news
-            </p>
-            <form class="mc4wp-form" method="post">
-              <div class="mc4wp-form-fields">
-                <div class="form-group">
-                  <input type="email" name="EMAIL" placeholder="Your email" required="">
-                </div>
-                <div class="form-group">
-                  <input type="submit" class="btn btn-lg btn-color" value="Sign Up">
-                </div>
-              </div>
-            </form>
-          </aside> <!-- end widget newsletter -->
+          @include('Frontend.Partials.Content.V1.Sidebar.NewsLetter')
 
-          <!-- Widget Socials -->
-          <aside class="widget widget-socials">
-            <h4 class="widget-title">Let's hang out on social</h4>
-            <div class="socials socials--wide socials--large">
-              <div class="row row-16">
-                <div class="col">
-                  <a class="social social-facebook" href="#" title="facebook" target="_blank" aria-label="facebook">
-                    <i class="ui-facebook"></i>
-                    <span class="social__text">Facebook</span>
-                  </a><!--
-                  --><a class="social social-twitter" href="#" title="twitter" target="_blank" aria-label="twitter">
-                    <i class="ui-twitter"></i>
-                    <span class="social__text">Twitter</span>
-                  </a><!--
-                  --><a class="social social-youtube" href="#" title="youtube" target="_blank" aria-label="youtube">
-                    <i class="ui-youtube"></i>
-                    <span class="social__text">Youtube</span>
-                  </a>
-                </div>
-                <div class="col">
-                  <a class="social social-google-plus" href="#" title="google" target="_blank" aria-label="google">
-                    <i class="ui-google"></i>
-                    <span class="social__text">Google+</span>
-                  </a><!--
-                  --><a class="social social-instagram" href="#" title="instagram" target="_blank" aria-label="instagram">
-                    <i class="ui-instagram"></i>
-                    <span class="social__text">Instagram</span>
-                  </a><!--
-                  --><a class="social social-rss" href="#" title="rss" target="_blank" aria-label="rss">
-                    <i class="ui-rss"></i>
-                    <span class="social__text">Rss</span>
-                  </a>
-                </div>                
-              </div>            
-            </div>
-          </aside> <!-- end widget socials -->
+          @include('Frontend.Partials.Content.V1.Sidebar.Socials')
 
         </aside> <!-- end sidebar -->
   

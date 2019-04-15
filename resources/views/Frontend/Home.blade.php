@@ -8,30 +8,6 @@
 @section('Main_content')
 
 <?php 
-/**
- * dump test view shared variable news
- */
-#echo "dump trending";
-//dump($trending);
-
-//echo "dump feature";
-//dump($feature);
-
-
-echo "dump latestPostByCat";
-dump($latestPostByCat);
-
-echo "dump popular";
-dump($popular);
-
-//echo "dump newsflash";
-//dump($newsflash);
-
-echo "dump editor_pick";
-dump($editor_pick);
-
-echo "dump recommended";
-dump($recommended);
 
 ?>
 
@@ -72,7 +48,7 @@ dump($recommended);
 
     @include('Frontend.Partials.Content.V1.Home.CategoriesPosts')
 
-    @include('Frontend.Partials.Content.V1.Home.VideoPosts')
+    {{-- @include('Frontend.Partials.Content.V1.Home.VideoPosts') --}}
 
     <!-- Content Secondary -->
     <div class="row">
