@@ -66,9 +66,7 @@ class PostRepo extends Controller
 		
 
 		// get 20 latest post 
-		$latestPosts = Post::whereNotIn('id' , $this->loaded_ids)->whereHas('translations', function($q){
-		    $q->orderBy('id' , 'desc');
-		})->take(20);
+		$latestPosts = Post::whereNotIn('id' , $this->loaded_ids)->orderBy('id' , 'desc')->take(20);
 		// post load only one time
 		array_push($this->loaded_ids, $latestPosts->pluck('id'));
 		$catsNews = array();
@@ -94,10 +92,27 @@ class PostRepo extends Controller
 	{
 		$popular = Post::whereNotIn('id' , $this->loaded_ids)->whereHas('translations', function($q){
 		    $q->orderBy('count_view' , 'desc');
-		})->take(4);
+		})->orderBy('id' , 'desc')->take(4);
 		array_push($this->loaded_ids, $popular->pluck('id'));
 		view()->share('popular' , $popular->get());
 		view()->share('loaded_ids' , $this->loaded_ids);
+	}
+
+	/**
+	 * [homePostByCat function load posts by category through category has been determine to show off in homepage]
+	 * @param  
+	 * @return [type]        [description]
+	 */
+	public function homePostByCat()
+	{
+		$categories = Category::whereTranslation('load_pos' , 'home_cat')->take(4);
+		$postsByCat = array();
+		foreach ($categories->get() as $category) {
+			$posts = $this->loadPostByCat($category);
+			$postsByCat[$category->title] = $posts;
+		}
+		dump($postsByCat);
+		view()->share('postsByCat' , $postsByCat);
 	}
 	/**
 	 * [loadPostByCat load news by category with order by latest time]
@@ -106,11 +121,12 @@ class PostRepo extends Controller
 	 */
 	public function loadPostByCat($category)
 	{
-		$cat = Category::find($category);
-		$postsByCat = $cat->posts()->whereNotIn('id' , $this->loaded_ids)->take(5);
+		//$cat = Category::find($category);
+		$postsByCat = $category->posts()->whereNotIn('id' , $this->loaded_ids)->orderBy('id' , 'desc')->take(5);
 		array_push($this->loaded_ids, $postsByCat->pluck('id'));
-		view()->share('postsByCat' , $postsByCat);
+		//view()->share('postsByCat' , $postsByCat);
 		view()->share('loaded_ids' , $this->loaded_ids);
+		return $postsByCat;
 	}
 	/**
 	 * [loadPostByTag load news by Tag]
@@ -120,7 +136,7 @@ class PostRepo extends Controller
 	public function loadPostByTag($tag)
 	{
 		$tagDb = Tag::find($tag);
-		$postsByTag = $tagDb->posts()->whereNotIn('id' , $this->loaded_ids)->take(5);
+		$postsByTag = $tagDb->posts()->whereNotIn('id' , $this->loaded_ids)->orderBy('id' , 'desc')->take(5);
 		array_push($this->loaded_ids, $postsByTag->pluck('id'));
 		view()->share('postsByTag' , $postsByTag);
 		view()->share('loaded_ids' , $this->loaded_ids);

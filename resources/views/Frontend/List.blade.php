@@ -33,7 +33,7 @@
           <h1 class="page-title">{{ $cateDb->title }}</h1>
 
           <div class="row card-row">
-            @foreach($postsByCat as $news)
+            @foreach($posts as $news)
             <div class="col-md-6">
               <article class="entry card">
                 <div class="entry__img-holder card__img-holder">
@@ -71,17 +71,17 @@
           </div>
 
           <!-- Pagination -->
-          @if ($postsByCat->lastPage() > 1)
+          @if ($posts->lastPage() > 1)
           <nav class="pagination">
             
-            @for ($i = 1; $i <= $postsByCat->lastPage(); $i++)
+            @for ($i = 1; $i <= $posts->lastPage(); $i++)
                   
-                  <a href="{{ $postsByCat->url($i) }}" class="pagination__page {{ ($postsByCat->currentPage() == $i) ? 'pagination__page--current' : '' }}">{{ $i }}</a>
+                  <a href="{{ $posts->url($i) }}" class="pagination__page {{ ($posts->currentPage() == $i) ? 'pagination__page--current' : '' }}">{{ $i }}</a>
               @endfor
             <!-- <a href="#" class="pagination__page">2</a>
             <a href="#" class="pagination__page">3</a>
             <a href="#" class="pagination__page">4</a> -->
-            <a href="{{ $postsByCat->url($postsByCat->currentPage()+1) }}" class="pagination__page pagination__icon pagination__page--next"><i class="ui-arrow-right"></i></a>
+            <a href="{{ $posts->url($posts->currentPage()+1) }}" class="pagination__page pagination__icon pagination__page--next"><i class="ui-arrow-right"></i></a>
           </nav>
           {{-- <ul class="pagination">
               <li class="{{ ($paginator->currentPage() == 1) ? ' disabled' : '' }}">

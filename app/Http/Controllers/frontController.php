@@ -34,6 +34,7 @@ class frontController extends Controller
         //$this->postRepo->loadFeaturePosts();
         $this->postRepo->loadLatest();
         $this->postRepo->loadPopular();
+        $this->postRepo->homePostByCat();
 
         $feature = $this->dataRepo->loadTypedNews(4, 'feature');
         $newsflash = $this->dataRepo->loadTypedNews(7, 'newsflash');
@@ -65,9 +66,9 @@ class frontController extends Controller
     {
         $this->postRepo->loadPopular();
         $cateDb = Category::whereTranslation('slug' , $category)->firstOrFail();
-        $postsByCat = $cateDb->posts()->paginate(8);
+        $posts = $cateDb->posts()->orderBy('id' , 'desc')->paginate(8);
         //dump($postsByCat);
-    	return view('Frontend.List' , compact('postsByCat' , 'cateDb'));
+    	return view('Frontend.List' , compact('posts' , 'cateDb'));
     }
 
     /**
@@ -79,9 +80,9 @@ class frontController extends Controller
     {
         $this->postRepo->loadPopular();
         $tagDb = Tag::whereTranslation('slug' , $category)->first();
-        $postsByTag = $tagDb->posts()->get();
-        dump($postsByTag);
-    	return view('Frontend.List' , compact('postsByTag' ,  'tagDb'));
+        $posts = $tagDb->posts()->orderBy('id' , 'desc')->paginate(8);
+        //dump($postsByTag);
+    	return view('Frontend.List' , compact('posts' ,  'tagDb'));
     }
     /**
      * [singlePost Load single news post]

@@ -99,6 +99,11 @@ class categoryController extends Controller
             $grid->id('ID')->sortable();
             $grid->column('title' , 'Title');
             $grid->column('description' , 'Description');
+            $states = [
+                'on' => ['value' => 'publish', 'text' => 'Publish', 'color' => 'primary'],
+                'off' => ['value' => 'pending', 'text' => 'Pending', 'color' => 'default'],
+            ];
+            $grid->status(__('Status'))->switch($states);
             $grid->created_at();
             $grid->updated_at();
         });

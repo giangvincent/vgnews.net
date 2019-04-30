@@ -1,0 +1,17 @@
+{
+  "name": "node_crawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node crawler.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "knex": "^0.16.5",
+    "mysql": "^2.17.1",
+    "x-ray": "^2.3.3"
+  }
+}

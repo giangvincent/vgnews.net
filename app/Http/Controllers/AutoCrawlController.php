@@ -26,6 +26,9 @@ class AutoCrawlController extends Controller
      */
 	protected $domain = '';
 
+    static public $dataCrawled = array();
+    static public $folderData = '/upload/crawledData/';
+
 	function __construct()
     {
     	# code...
@@ -39,7 +42,19 @@ class AutoCrawlController extends Controller
     public function initUrl($url_id)
     {
     	$this->url = UrlCraw::where('id' , $url_id)->where('status' , 'active')->firstOrFail();
-    	$this->initCrawler();
+        self::$folderData = public_path() . self::$folderData . $this->url->id;
+        $allFileData = $this->dirToArray(self::$folderData);
+        
+        foreach ($allFileData as $file) {
+            $timeCrawl = explode('.', $file);
+            dump(date('d M ,Y' , $timeCrawl[0]));
+            $data = json_decode( file_get_contents(self::$folderData . '/' . $file) , true);
+            array_push(self::$dataCrawled, $data);
+            unlink(self::$folderData . '/' . $file);
+        }
+        $this->insertDataCrawled();
+        //dd(self::$dataCrawled);
+    	//$this->initCrawler();
     	//return true;
     }
 
@@ -55,6 +70,34 @@ class AutoCrawlController extends Controller
 			$this->url = $url;
 			$this->initCrawler();
 		}
+    }
+
+    /**
+     * [insertDataCrawled insert into db data crawled saved in a file json]
+     * @return [type] [description]
+     */
+    public function insertDataCrawled()
+    {
+        $allData = self::$dataCrawled;
+        foreach ($allData as $data) {
+            foreach ($data as $d) {
+                $d['title'] = trim(trim($d['title']));
+                //dump($d['title']);
+                $d['slug'] = $this->khongdau($d['title']);
+                if (Post::whereTranslation('slug' , $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content'])) {
+                    $post = new Post();
+                    $post->title = $d['title'];
+                    $post->slug = $d['slug'];
+                    $post->description = isset($d['description']) ? $d['description'] : '';
+                    $post->content = $d['content'];
+                    $post->media = $d['image'];
+                    $post->source_link = $d['link'];
+                    $post->save();
+                    $post->categories()->attach($this->url->categories()->pluck('id'));
+                    //dump($post);
+                }
+            }
+        }
     }
 
     /**
@@ -106,5 +149,28 @@ class AutoCrawlController extends Controller
     function stringIsNullOrWhitespace($text){
 	    return ctype_space($text) || $text === "" || $text === null;
 	}
+
+    function dirToArray($dir) {
+
+        $result = array();
+
+        $cdir = scandir($dir);
+        foreach ($cdir as $key => $value)
+        {
+            if (!in_array($value,array(".","..")))
+            {
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $value))
+                {
+                    $result[$value] = dirToArray($dir . DIRECTORY_SEPARATOR . $value);
+                }
+                else
+                {
+                    $result[] = $value;
+                }
+            }
+        }
+
+        return $result;
+    } 
 
 }

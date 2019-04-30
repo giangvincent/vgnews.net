@@ -144,8 +144,12 @@ class domRuleController extends Controller
 
             	// save file json for x-ray crawler run
             	$myfile = fopen(public_path("upload\\rules\\".$form->model()->id.'.json'), "w") or die("Unable to open file!");
-				
-				fwrite($myfile, $form->model()->dom_parse_rule);
+				# preparing json data for saveing into file
+                $jsonFile = json_decode($form->model()->dom_parse_rule , true);
+                $urlCrawl = HtmlDomRule::find($form->model()->id)->urlCrawl()->pluck('url');
+                $jsonFile['url_crawl'] = $urlCrawl;
+                $jsonFile = json_encode($jsonFile); 
+				fwrite($myfile, $jsonFile);
 				fclose($myfile);
             	//file_put_contents(public_path("rules\\".$form->model()->id.'.json'), json_encode($form->model()->dom_parse_rule));
             });
