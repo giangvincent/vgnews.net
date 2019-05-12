@@ -153,6 +153,19 @@ class UrlCrawController extends Controller
             $form->switch('status' , 'Status')->states($states);
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
+
+            $form->saved(function (Form $form) {
+                $myfile = fopen(public_path("upload\\rules\\".$form->model()->id.'.json'), "w") or die("Unable to open file!");
+                    # preparing json data for saveing into file
+                $ruleParse = UrlCraw::find($form->model()->id)->rules()->pluck('dom_parse_rule');
+                $jsonFile = json_decode($ruleParse[0] , true);
+                //dd($jsonFile);
+                    # attach url 
+                $jsonFile['url_crawl'] = $form->model()->url;
+                $jsonFile = json_encode($jsonFile); 
+                fwrite($myfile, $jsonFile);
+                fclose($myfile);
+            });
         });
     }
 

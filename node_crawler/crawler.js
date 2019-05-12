@@ -29,11 +29,11 @@ function init(urlCrawl , data_file , filename) {
         	//console.log(data_file.list[i])
         	xray(urlCrawl, data_file.list[i].list_element, [{
         		title: data_file.list[i].title_filter,
-        		link: data_file.list[i].link_filter,
-        		image: data_file.list[i].cover_filter,
-        		description: xray(data_file.list[i].link_filter, data_file.detail.description),
-        		content: xray(data_file.list[i].link_filter, data_file.detail.content)
-        	}])
+                link: data_file.list[i].link_filter,
+                image: (data_file.list[i].cover_filter_attr != 'detail-page') ? data_file.list[i].cover_filter : xray(data_file.list[i].link_filter, data_file.list[i].cover_filter),
+                description: xray(data_file.list[i].link_filter, data_file.detail.description),
+                content: xray(data_file.list[i].link_filter, data_file.detail.content)
+            }])
         	.then(function (data) {
         		//console.log(data)
         		num_push++;

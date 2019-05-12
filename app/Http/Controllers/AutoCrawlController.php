@@ -42,7 +42,7 @@ class AutoCrawlController extends Controller
     public function initUrl($url_id)
     {
     	$this->url = UrlCraw::where('id' , $url_id)->where('status' , 'active')->firstOrFail();
-        self::$folderData = public_path() . self::$folderData . $this->url->id;
+        self::$folderData = public_path() . self::$folderData . $this->url->id;#set crawled data stored folder
         $allFileData = $this->dirToArray(self::$folderData);
         
         foreach ($allFileData as $file) {

@@ -141,16 +141,21 @@ class domRuleController extends Controller
             });
 
             $form->saved(function (Form $form) {
-
-            	// save file json for x-ray crawler run
-            	$myfile = fopen(public_path("upload\\rules\\".$form->model()->id.'.json'), "w") or die("Unable to open file!");
-				# preparing json data for saveing into file
-                $jsonFile = json_decode($form->model()->dom_parse_rule , true);
-                $urlCrawl = HtmlDomRule::find($form->model()->id)->urlCrawl()->pluck('url');
-                $jsonFile['url_crawl'] = $urlCrawl;
-                $jsonFile = json_encode($jsonFile); 
-				fwrite($myfile, $jsonFile);
-				fclose($myfile);
+                # get list url crawl
+                $urlCrawls = HtmlDomRule::find($form->model()->id)->urlCrawl()->get();
+                foreach ($urlCrawls as $urlCrawl) {
+                    // save file json for x-ray crawler run for each urlcrawl that used current dom parse rule
+                    $myfile = fopen(public_path("upload\\rules\\".$urlCrawl->id.'.json'), "w") or die("Unable to open file!");
+                    # preparing json data for saveing into file
+                    $jsonFile = json_decode($form->model()->dom_parse_rule , true);
+                    # attach url 
+                    $jsonFile['url_crawl'] = $urlCrawl->url;
+                    $jsonFile = json_encode($jsonFile); 
+                    fwrite($myfile, $jsonFile);
+                    fclose($myfile);
+                }
+                	
+    				
             	//file_put_contents(public_path("rules\\".$form->model()->id.'.json'), json_encode($form->model()->dom_parse_rule));
             });
 

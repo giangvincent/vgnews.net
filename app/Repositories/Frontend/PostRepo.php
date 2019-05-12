@@ -111,7 +111,7 @@ class PostRepo extends Controller
 			$posts = $this->loadPostByCat($category);
 			$postsByCat[$category->title] = $posts;
 		}
-		dump($postsByCat);
+		//dump($postsByCat);
 		view()->share('postsByCat' , $postsByCat);
 	}
 	/**
@@ -126,7 +126,7 @@ class PostRepo extends Controller
 		array_push($this->loaded_ids, $postsByCat->pluck('id'));
 		//view()->share('postsByCat' , $postsByCat);
 		view()->share('loaded_ids' , $this->loaded_ids);
-		return $postsByCat;
+		return $postsByCat->get();
 	}
 	/**
 	 * [loadPostByTag load news by Tag]
