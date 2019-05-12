@@ -26,13 +26,13 @@ function init(urlCrawl, data_file, filename) {
 		var num_push = 0;
 		//console.log(data_file)
 		for (var i = data_file.list.length - 1; i >= 0; i--) {
-			console.log('data_file.list[i]#' , data_file.list[i])
+			//console.log(data_file.list[i])
 			xray(urlCrawl, data_file.list[i].list_element, [{
 				title: data_file.list[i].title_filter,
 				link: data_file.list[i].link_filter,
 				image: (data_file.list[i].cover_filter_attr != 'detail-page') ? data_file.list[i].cover_filter : xray(data_file.list[i].link_filter, data_file.list[i].cover_filter),
 				description: xray(data_file.list[i].link_filter, data_file.detail.description),
-				content: xray(data_file.list[i].link_filter, data_file.detail.content)
+				content: xray(data_file.list[i].link_filter, data_file.detail.content + '@html')
 			}]).then(function (data) {
 				//console.log(data)
 				num_push++;
@@ -42,12 +42,12 @@ function init(urlCrawl, data_file, filename) {
 
 				//console.log(data.length)
 				if (num_push == data_file.list.length) {
-					console.log('ret#' , ret)
+					console.log(ret)
 					saveCrawledData(ret, crawledDataFolder, filename)
 					return true;
 				}
 			}).catch(function (err) {
-				console.log('err crawl# ' , err)
+				console.log(err)
 			})
 		}
 	} else {
@@ -98,9 +98,9 @@ function saveCrawledData(data, crawledDataFolder = crawledDataFolder, filename) 
 readFolder.getListFiles(rulesFolder, function (content, filename) {
 	content = JSON.parse(content)
 	//console.log(content)
-	for (var i = 0; i < content['url_crawl'].length; i++) {
-		init(content['url_crawl'][i], content, filename)
-	}
+	//for (var i = 0; i < content['url_crawl'].length; i++) {
+		init(content['url_crawl'], content, filename)
+	//}
 
 });
 

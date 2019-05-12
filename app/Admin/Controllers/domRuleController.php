@@ -98,16 +98,16 @@ class domRuleController extends Controller
         return Admin::grid(HtmlDomRule::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-            $grid->column('rule_name' , 'Rule Name');
-            $grid->column('dom_parse_rule' , 'Rules JSON')->display(function ($parse_rule) {
-            	return '<pre>'.json_encode(json_decode($parse_rule , true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE).'</pre>';
+            $grid->column('rule_name', 'Rule Name');
+            $grid->column('dom_parse_rule', 'Rules JSON')->display(function ($parse_rule) {
+                return '<pre>' . json_encode(json_decode($parse_rule, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . '</pre>';
             });
-            $grid->column('replace_rule' , 'Replace Rule')->display(function ($replace_rule) {
-            	return '<pre>'.json_encode(json_decode($replace_rule , true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE).'</pre>';
+            $grid->column('replace_rule', 'Replace Rule')->display(function ($replace_rule) {
+                return '<pre>' . json_encode(json_decode($replace_rule, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . '</pre>';
             });
 
             $grid->type_rule('Type rule');
-            
+
             $grid->created_at();
             $grid->updated_at();
         });
@@ -123,21 +123,21 @@ class domRuleController extends Controller
         return Admin::form(HtmlDomRule::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            
-            $form->select('type', 'Type of rule')->options(['detail' => 'Rule for Detail', 'list' => 'Rule for List']);
-            $form->text('rule_name' , 'Rule Name');
-           	$form->parse_rule('Parse Rule');
-            
-            $form->saving(function (Form $form) {
-            	if ($form->rule_name != '') {
-            		if ($form->dom_parse_rule != '') {
-            			$form->model()->dom_parse_rule = $form->dom_parse_rule;
-            		}
 
-            		if ($form->replace_rule != '') {
-            			$form->model()->replace_rule = $form->replace_rule;
-            		}
-            	}
+            $form->select('type', 'Type of rule')->options(['detail' => 'Rule for Detail', 'list' => 'Rule for List']);
+            $form->text('rule_name', 'Rule Name');
+            $form->parse_rule('Parse Rule');
+
+            $form->saving(function (Form $form) {
+                if ($form->rule_name != '') {
+                    if ($form->dom_parse_rule != '') {
+                        $form->model()->dom_parse_rule = $form->dom_parse_rule;
+                    }
+
+                    if ($form->replace_rule != '') {
+                        $form->model()->replace_rule = $form->replace_rule;
+                    }
+                }
             });
 
             $form->saved(function (Form $form) {
@@ -145,27 +145,25 @@ class domRuleController extends Controller
                 $urlCrawls = HtmlDomRule::find($form->model()->id)->urlCrawl()->get();
                 foreach ($urlCrawls as $urlCrawl) {
                     // save file json for x-ray crawler run for each urlcrawl that used current dom parse rule
-                    $myfile = fopen(public_path("upload\\rules\\".$urlCrawl->id.'.json'), "w") or die("Unable to open file!");
+                    $myfile = fopen(public_path("upload\\rules\\" . $urlCrawl->id . '.json'), "w") or die("Unable to open file!");
                     # preparing json data for saveing into file
-                    $jsonFile = json_decode($form->model()->dom_parse_rule , true);
+                    $jsonFile = json_decode($form->model()->dom_parse_rule, true);
                     # attach url 
                     $jsonFile['url_crawl'] = $urlCrawl->url;
-                    $jsonFile = json_encode($jsonFile); 
+                    $jsonFile = json_encode($jsonFile);
                     fwrite($myfile, $jsonFile);
                     fclose($myfile);
                 }
-                	
-    				
-            	//file_put_contents(public_path("rules\\".$form->model()->id.'.json'), json_encode($form->model()->dom_parse_rule));
-            });
 
+
+                //file_put_contents(public_path("rules\\".$form->model()->id.'.json'), json_encode($form->model()->dom_parse_rule));
+            });
         });
     }
 
     public function getRulesApi()
     {
-	    $q = $_GET['q'];
-	    return HtmlDomRule::where('rule_name', 'like', "%$q%")->paginate(null, ['id', 'rule_name as text']);
-
+        $q = $_GET['q'];
+        return HtmlDomRule::where('rule_name', 'like', "%$q%")->paginate(null, ['id', 'rule_name as text']);
     }
 }

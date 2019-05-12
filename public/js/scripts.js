@@ -1,10 +1,19 @@
+$(function() {
+  console.log('Init lazyload #')
+  $("img").each(function () {
+    if ($(this).attr('data-original') != '')
+      $(this).attr('src' , $(this).attr('data-original'))
+  });
+});
+
 (function($){
   "use strict";
 
   var $window = $(window);
-
+  
   $window.on('load', function() {
     $window.trigger("resize");
+    
   });
 
   // Preloader
@@ -468,5 +477,5 @@
     $('html, body').animate({scrollTop: 0}, 1000, "easeInOutQuint");
     return false;
   });
-
+  
 })(jQuery);
