@@ -13,57 +13,54 @@ const crawledDataFolder = '../public/upload/crawledData/';
 let db = require('./dbConfig.js')
 let readFolder = require('./folderRead.js')
 
-function init(urlCrawl , data_file , filename) {
-	
-    // file json of the crawl json rule
-    //var file = decodeURIComponent(req.query.json);
-    //var temp_file = './1.json';
-    if (urlCrawl != null && urlCrawl != 'undefined' & urlCrawl != '' ) {
-        //var data_file;
-        //data_file = JSON.parse(body);
+function init(urlCrawl, data_file, filename) {
 
-        var ret = [];
-        var num_push = 0;
-        //console.log(data_file)
-        for (var i = data_file.list.length - 1; i >= 0; i--) {
-        	//console.log(data_file.list[i])
-        	xray(urlCrawl, data_file.list[i].list_element, [{
-        		title: data_file.list[i].title_filter,
-                link: data_file.list[i].link_filter,
-                image: (data_file.list[i].cover_filter_attr != 'detail-page') ? data_file.list[i].cover_filter : xray(data_file.list[i].link_filter, data_file.list[i].cover_filter),
-                description: xray(data_file.list[i].link_filter, data_file.detail.description),
-                content: xray(data_file.list[i].link_filter, data_file.detail.content)
-            }])
-        	.then(function (data) {
-        		//console.log(data)
-        		num_push++;
-        		for(var d of data){
-        			ret.push(d)
-        		}
+	// file json of the crawl json rule
+	//var file = decodeURIComponent(req.query.json);
+	//var temp_file = './1.json';
+	if (urlCrawl != null && urlCrawl != 'undefined' & urlCrawl != '') {
+		//var data_file;
+		//data_file = JSON.parse(body);
 
-        		//console.log(data.length)
-        		if (num_push == data_file.list.length) {
-        			console.log(ret)
-        			saveCrawledData(ret , crawledDataFolder , filename)
-        			return true;
-        		}
-        	})
-        	.catch(function (err) {
-        		console.log(err)
-        	})
-        } 
-    } else {
-        return false;
-    }
+		var ret = [];
+		var num_push = 0;
+		//console.log(data_file)
+		for (var i = data_file.list.length - 1; i >= 0; i--) {
+			console.log('data_file.list[i]#' , data_file.list[i])
+			xray(urlCrawl, data_file.list[i].list_element, [{
+				title: data_file.list[i].title_filter,
+				link: data_file.list[i].link_filter,
+				image: (data_file.list[i].cover_filter_attr != 'detail-page') ? data_file.list[i].cover_filter : xray(data_file.list[i].link_filter, data_file.list[i].cover_filter),
+				description: xray(data_file.list[i].link_filter, data_file.detail.description),
+				content: xray(data_file.list[i].link_filter, data_file.detail.content)
+			}]).then(function (data) {
+				//console.log(data)
+				num_push++;
+				for (var d of data) {
+					ret.push(d)
+				}
+
+				//console.log(data.length)
+				if (num_push == data_file.list.length) {
+					console.log('ret#' , ret)
+					saveCrawledData(ret, crawledDataFolder, filename)
+					return true;
+				}
+			}).catch(function (err) {
+				console.log('err crawl# ' , err)
+			})
+		}
+	} else {
+		return false;
+	}
 }
 
-function saveCrawledData(data , crawledDataFolder = crawledDataFolder , filename) {
-	if (!fs.existsSync(crawledDataFolder + filename.replace('.json' , ''))){
-		fs.mkdirSync(crawledDataFolder + filename.replace('.json' , ''));
+function saveCrawledData(data, crawledDataFolder = crawledDataFolder, filename) {
+	if (!fs.existsSync(crawledDataFolder + filename.replace('.json', ''))) {
+		fs.mkdirSync(crawledDataFolder + filename.replace('.json', ''));
 	}
-	var stream = fs.createWriteStream(crawledDataFolder + filename.replace('.json' , '') + "/" + (Date.now() / 1000) + ".json");
-	stream.once('open', function(fd) {
-
+	var stream = fs.createWriteStream(crawledDataFolder + filename.replace('.json', '') + "/" + (Date.now() / 1000) + ".json");
+	stream.once('open', function (fd) {
 		stream.write(JSON.stringify(data));
 		stream.end();
 	});
@@ -77,7 +74,7 @@ function saveCrawledData(data , crawledDataFolder = crawledDataFolder , filename
 // 	}, function(err) {
 // 		throw err;
 // 	});
-	
+
 // }
 
 // function readFiles(dirname, onFileContent, onError) {
@@ -98,13 +95,13 @@ function saveCrawledData(data , crawledDataFolder = crawledDataFolder , filename
 //     });
 // }
 
-readFolder.getListFiles("../public/upload/rules/", function (content , filename) {
+readFolder.getListFiles(rulesFolder, function (content, filename) {
 	content = JSON.parse(content)
 	//console.log(content)
- 	for (var i = 0; i < content['url_crawl'].length; i++) {
- 		init(content['url_crawl'][i] , content , filename)
- 	}
-		
+	for (var i = 0; i < content['url_crawl'].length; i++) {
+		init(content['url_crawl'][i], content, filename)
+	}
+
 });
 
 

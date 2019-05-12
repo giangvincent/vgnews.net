@@ -40,11 +40,11 @@ class frontController extends Controller
         $newsflash = $this->dataRepo->loadTypedNews(7, 'newsflash');
         $editor_pick = $this->dataRepo->loadTypedNews(7, 'editor_pick');
         $recommended = $this->dataRepo->loadTypedNews(2, 'recommended');
-        view()->share('feature' , $feature);
-        view()->share('newsflash' , $newsflash);
-        view()->share('editor_pick' , $editor_pick);
-        view()->share('recommended' , $recommended);
-    	return view('Frontend.Home');
+        view()->share('feature', $feature);
+        view()->share('newsflash', $newsflash);
+        view()->share('editor_pick', $editor_pick);
+        view()->share('recommended', $recommended);
+        return view('Frontend.Home');
     }
     /**
      * [ajaxPaginate load nes by paginate for ajax request]
@@ -52,10 +52,8 @@ class frontController extends Controller
      * @param [string] $[load_type] [Type of the news need to load (homepage , list , detail)]
      * @return [object] []
      */
-    public function ajaxPaginate($page , $load_type = 'homepage')
-    {
-        
-    }
+    public function ajaxPaginate($page, $load_type = 'homepage')
+    { }
 
     /**
      * [catePage load category page]
@@ -65,10 +63,10 @@ class frontController extends Controller
     public function catePage($category)
     {
         $this->postRepo->loadPopular();
-        $cateDb = Category::whereTranslation('slug' , $category)->firstOrFail();
-        $posts = $cateDb->posts()->orderBy('id' , 'desc')->paginate(8);
+        $cateDb = Category::whereTranslation('slug', $category)->firstOrFail();
+        $posts = $cateDb->posts()->orderBy('id', 'desc')->paginate(8);
         //dump($postsByCat);
-    	return view('Frontend.List' , compact('posts' , 'cateDb'));
+        return view('Frontend.List', compact('posts', 'cateDb'));
     }
 
     /**
@@ -79,10 +77,10 @@ class frontController extends Controller
     public function tagPage($tag)
     {
         $this->postRepo->loadPopular();
-        $tagDb = Tag::whereTranslation('slug' , $category)->first();
-        $posts = $tagDb->posts()->orderBy('id' , 'desc')->paginate(8);
+        $tagDb = Tag::whereTranslation('slug', $category)->first();
+        $posts = $tagDb->posts()->orderBy('id', 'desc')->paginate(8);
         //dump($postsByTag);
-    	return view('Frontend.List' , compact('posts' ,  'tagDb'));
+        return view('Frontend.List', compact('posts',  'tagDb'));
     }
     /**
      * [singlePost Load single news post]
@@ -90,14 +88,14 @@ class frontController extends Controller
      * @param  [integer] $id   [identify the position of the post]
      * @return [view]       [Frontend of single news page]
      */
-    public function singlePost($slug , $id)
+    public function singlePost($slug, $id)
     {
         $this->postRepo->loadPopular();
-        $postDb = Post::where('id' , $id)->whereTranslation('slug' , $slug)->first();
+        $postDb = Post::where('id', $id)->whereTranslation('slug', $slug)->first();
         $cateDb = $postDb->categories();
         #$commentList , $relatedPosts , $postsNavigation
-    	return view('Frontend.Single' , compact('postDb' , 'cateDb'));
-    } 
+        return view('Frontend.Single', compact('postDb', 'cateDb'));
+    }
     /**
      * [singlePage load a specific page]
      * @param  [string] $page [name of the page]
@@ -122,8 +120,7 @@ class frontController extends Controller
     public function pageSearch($query)
     {
         $this->postRepo->loadPopular();
-        $postsSearch = Post::whereTranslationLike('title' , '%'.$query.'%')->orWhereTranslationLike('slug' , '%'.$query.'%')->paginate(8);
-        return view('Frontend.List' , compact('postsSearch' , 'query'));
+        $postsSearch = Post::whereTranslationLike('title', '%' . $query . '%')->orWhereTranslationLike('slug', '%' . $query . '%')->paginate(8);
+        return view('Frontend.List', compact('postsSearch', 'query'));
     }
-    
 }

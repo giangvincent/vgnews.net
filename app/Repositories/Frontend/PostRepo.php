@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Repositories\Frontend;
 
@@ -24,9 +24,7 @@ class PostRepo extends Controller
 	}
 
 	function __destruct()
-	{
-		
-	}
+	{ }
 
 	/**
 	 * [loadTrending load trending news base on views number latest and in short of time]
@@ -34,12 +32,12 @@ class PostRepo extends Controller
 	 */
 	public function loadTrending()
 	{
-		$trendingPosts = Post::whereNotIn('id' , $this->loaded_ids)->whereHas('translations', function($q){
-		    $q->where('locale' , \App::getLocale())->orderBy('count_vote' , 'desc')->orderBy('created_at' , 'desc');
+		$trendingPosts = Post::whereNotIn('id', $this->loaded_ids)->whereHas('translations', function ($q) {
+			$q->where('locale', \App::getLocale())->orderBy('count_vote', 'desc')->orderBy('created_at', 'desc');
 		})->take(5);
 		//$trendingPosts = Post::whereNotIn('id' , $this->loaded_ids)->translations()->where('locale' , \App::getLocale())->orderBy('count_vote' , 'desc')->orderBy('created_at' , 'desc');
 		//array_push($this->loaded_ids, $trendingPosts->pluck('id'));
-		view()->share('trending' , $trendingPosts->get());
+		view()->share('trending', $trendingPosts->get());
 		//view()->share('loaded_ids' , $this->loaded_ids);
 	}
 
@@ -49,12 +47,12 @@ class PostRepo extends Controller
 	 */
 	public function loadFeaturePosts()
 	{
-		$feature = Post::whereNotIn('id' , $this->loaded_ids)->whereHas('translations', function($q){
-		    $q->where('locale' , \App::getLocale())->orderBy('count_view' , 'desc')->orderBy('count_comment' , 'desc')->orderBy('count_vote' , 'desc');
+		$feature = Post::whereNotIn('id', $this->loaded_ids)->whereHas('translations', function ($q) {
+			$q->where('locale', \App::getLocale())->orderBy('count_view', 'desc')->orderBy('count_comment', 'desc')->orderBy('count_vote', 'desc');
 		})->take(4);
 		array_push($this->loaded_ids, $feature->pluck('id'));
-		view()->share('feature' , $feature->get());
-		view()->share('loaded_ids' , $this->loaded_ids);
+		view()->share('feature', $feature->get());
+		view()->share('loaded_ids', $this->loaded_ids);
 	}
 
 	/**
@@ -63,10 +61,10 @@ class PostRepo extends Controller
 	 */
 	public function loadLatest()
 	{
-		
+
 
 		// get 20 latest post 
-		$latestPosts = Post::whereNotIn('id' , $this->loaded_ids)->orderBy('id' , 'desc')->take(20);
+		$latestPosts = Post::whereNotIn('id', $this->loaded_ids)->orderBy('id', 'desc')->take(20);
 		// post load only one time
 		array_push($this->loaded_ids, $latestPosts->pluck('id'));
 		$catsNews = array();
@@ -79,9 +77,9 @@ class PostRepo extends Controller
 			}
 		}
 		//dump($latestPostByCat);
-		view()->share('catsNews' , $catsNews);
-		view()->share('latestPosts' , $latestPosts->get());
-		view()->share('loaded_ids' , $this->loaded_ids);
+		view()->share('catsNews', $catsNews);
+		view()->share('latestPosts', $latestPosts->get());
+		view()->share('loaded_ids', $this->loaded_ids);
 	}
 
 	/**
@@ -90,12 +88,12 @@ class PostRepo extends Controller
 	 */
 	public function loadPopular()
 	{
-		$popular = Post::whereNotIn('id' , $this->loaded_ids)->whereHas('translations', function($q){
-		    $q->orderBy('count_view' , 'desc');
-		})->orderBy('id' , 'desc')->take(4);
+		$popular = Post::whereNotIn('id', $this->loaded_ids)->whereHas('translations', function ($q) {
+			$q->orderBy('count_view', 'desc');
+		})->orderBy('id', 'desc')->take(4);
 		array_push($this->loaded_ids, $popular->pluck('id'));
-		view()->share('popular' , $popular->get());
-		view()->share('loaded_ids' , $this->loaded_ids);
+		view()->share('popular', $popular->get());
+		view()->share('loaded_ids', $this->loaded_ids);
 	}
 
 	/**
@@ -105,14 +103,14 @@ class PostRepo extends Controller
 	 */
 	public function homePostByCat()
 	{
-		$categories = Category::whereTranslation('load_pos' , 'home_cat')->take(4);
+		$categories = Category::whereTranslation('load_pos', 'home_cat')->take(4);
 		$postsByCat = array();
 		foreach ($categories->get() as $category) {
 			$posts = $this->loadPostByCat($category);
 			$postsByCat[$category->title] = $posts;
 		}
 		//dump($postsByCat);
-		view()->share('postsByCat' , $postsByCat);
+		view()->share('postsByCat', $postsByCat);
 	}
 	/**
 	 * [loadPostByCat load news by category with order by latest time]
@@ -122,10 +120,10 @@ class PostRepo extends Controller
 	public function loadPostByCat($category)
 	{
 		//$cat = Category::find($category);
-		$postsByCat = $category->posts()->whereNotIn('id' , $this->loaded_ids)->orderBy('id' , 'desc')->take(5);
+		$postsByCat = $category->posts()->whereNotIn('id', $this->loaded_ids)->orderBy('id', 'desc')->take(5);
 		array_push($this->loaded_ids, $postsByCat->pluck('id'));
 		//view()->share('postsByCat' , $postsByCat);
-		view()->share('loaded_ids' , $this->loaded_ids);
+		view()->share('loaded_ids', $this->loaded_ids);
 		return $postsByCat->get();
 	}
 	/**
@@ -136,10 +134,10 @@ class PostRepo extends Controller
 	public function loadPostByTag($tag)
 	{
 		$tagDb = Tag::find($tag);
-		$postsByTag = $tagDb->posts()->whereNotIn('id' , $this->loaded_ids)->orderBy('id' , 'desc')->take(5);
+		$postsByTag = $tagDb->posts()->whereNotIn('id', $this->loaded_ids)->orderBy('id', 'desc')->take(5);
 		array_push($this->loaded_ids, $postsByTag->pluck('id'));
-		view()->share('postsByTag' , $postsByTag);
-		view()->share('loaded_ids' , $this->loaded_ids);
+		view()->share('postsByTag', $postsByTag);
+		view()->share('loaded_ids', $this->loaded_ids);
 	}
 	/**
 	 * [ajaxPostWithPagination loading ajax for news with pagination]
@@ -148,11 +146,11 @@ class PostRepo extends Controller
 	 */
 	public function ajaxPostWithPagination($loaded_ids)
 	{
-		$postsWithPagination = Post::whereNotIn('id' , $loaded_ids)->whereHas('translations', function($q){
-		    $q->where('locale' , \App::getLocale())->orderBy('id','desc')->orderBy('updated_at' , 'desc');
+		$postsWithPagination = Post::whereNotIn('id', $loaded_ids)->whereHas('translations', function ($q) {
+			$q->where('locale', \App::getLocale())->orderBy('id', 'desc')->orderBy('updated_at', 'desc');
 		});
-		view()->share('loaded_ids' , $postsWithPagination->pluck('id'));
+		view()->share('loaded_ids', $postsWithPagination->pluck('id'));
 		$postsWithPagination->paginate(7);
-		return view('Frontend.Partials.Content.V1.Home.PaginatePosts' , compact('postsWithPagination'));
+		return view('Frontend.Partials.Content.V1.Home.PaginatePosts', compact('postsWithPagination'));
 	}
 }
