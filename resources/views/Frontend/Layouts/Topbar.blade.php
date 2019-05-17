@@ -1,3 +1,4 @@
+<!-- TODO Top bar -->
 <!-- Top Bar -->
     <div class="top-bar d-none d-lg-block">
       <div class="container">

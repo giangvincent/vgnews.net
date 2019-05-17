@@ -8,6 +8,7 @@
           </a>
         </aside> <!-- end widget ad 300 -->
         
+        <!-- TODO Categories Widgets sidebar -->
         <!-- Widget Categories -->
         <aside class="widget widget_categories">
           <h4 class="widget-title">Categories</h4>

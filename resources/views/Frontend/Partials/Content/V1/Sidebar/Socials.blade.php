@@ -1,3 +1,4 @@
+<!-- TODO socials wiget make fanpage, and this dynamic wiget -->
 <!-- Widget Socials -->
       <aside class="widget widget-socials">
         <h4 class="widget-title">Let's hang out on social</h4>

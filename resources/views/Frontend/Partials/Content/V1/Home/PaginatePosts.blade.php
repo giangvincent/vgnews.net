@@ -1,3 +1,4 @@
+<!-- TODO Paginate all News the rest of news  -->
 <!-- Worldwide News -->
         <section class="section">
           <div class="title-wrap title-wrap--line">

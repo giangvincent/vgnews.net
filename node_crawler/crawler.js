@@ -30,6 +30,7 @@ function init(urlCrawl, data_file, filename) {
 			xray(urlCrawl, data_file.list[i].list_element, [{
 				title: data_file.list[i].title_filter,
 				link: data_file.list[i].link_filter,
+				// TODO  : get high definition Image
 				image: (data_file.list[i].cover_filter_attr != 'detail-page') ? data_file.list[i].cover_filter : xray(data_file.list[i].link_filter, data_file.list[i].cover_filter),
 				description: xray(data_file.list[i].link_filter, data_file.detail.description),
 				content: xray(data_file.list[i].link_filter, data_file.detail.content + '@html')

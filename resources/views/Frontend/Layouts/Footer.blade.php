@@ -1,3 +1,4 @@
+<!-- TODO : footer -->
 <!-- Footer -->
     <footer class="footer footer--dark">
       <div class="container">

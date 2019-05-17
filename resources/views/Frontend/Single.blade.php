@@ -102,18 +102,13 @@
                 </div> <!-- end entry article -->
               </div> <!-- end entry article wrap -->
               
-
+              <!-- TODO : after the content of single post -->
               @include('Frontend.Partials.Content.V1.Single.NewsletterWide')
-
               @include('Frontend.Partials.Content.V1.Single.Navigator')
-
               @include('Frontend.Partials.Content.V1.Single.Author')
-
               @include('Frontend.Partials.Content.V1.Single.RelatedPost')
-
             </article> <!-- end standard post -->
-
-            
+            <!-- TODO : Comment box -->
             @include('Frontend.Partials.Content.V1.Single.CommentList')
             @include('Frontend.Partials.Content.V1.Single.CommentForm')
 
@@ -124,9 +119,7 @@
         <aside class="col-lg-4 sidebar sidebar--right">
 
           @include('Frontend.Partials.Content.V1.Sidebar.PopularPosts')
-
           @include('Frontend.Partials.Content.V1.Sidebar.NewsLetter')
-
           @include('Frontend.Partials.Content.V1.Sidebar.Socials')
 
         </aside> <!-- end sidebar -->

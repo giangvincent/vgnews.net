@@ -14,24 +14,25 @@ use App\Model\Content\Tag;
 Declare the class for auto crawl by cronjob in the future
 将来通过cronjob声明自动爬行的类
  */
+
 class AutoCrawlController extends Controller
 {
-	protected $crawlTool = "http://localhost:3000/crawl";
+    protected $crawlTool = "http://localhost:3000/crawl";
     /*
     @url - crawl from url
      */
-	protected $url = '';
+    protected $url = '';
     /*
     * @domain : crawl from domain which mean contain many different url
      */
-	protected $domain = '';
+    protected $domain = '';
 
     static public $dataCrawled = array();
     static public $folderData = '/upload/crawledData/';
 
-	function __construct()
+    function __construct()
     {
-    	# code...
+        # code...
     }
 
     /**
@@ -41,21 +42,21 @@ class AutoCrawlController extends Controller
      */
     public function initUrl($url_id)
     {
-    	$this->url = UrlCraw::where('id' , $url_id)->where('status' , 'active')->firstOrFail();
-        self::$folderData = public_path() . self::$folderData . $this->url->id;#set crawled data stored folder
+        $this->url = UrlCraw::where('id', $url_id)->where('status', 'active')->firstOrFail();
+        self::$folderData = public_path() . self::$folderData . $this->url->id; #set crawled data stored folder
         $allFileData = $this->dirToArray(self::$folderData);
-        
+
         foreach ($allFileData as $file) {
             $timeCrawl = explode('.', $file);
-            dump(date('d M ,Y' , $timeCrawl[0]));
-            $data = json_decode( file_get_contents(self::$folderData . '/' . $file) , true);
+            dump(date('d M ,Y', $timeCrawl[0]));
+            $data = json_decode(file_get_contents(self::$folderData . '/' . $file), true);
             array_push(self::$dataCrawled, $data);
             unlink(self::$folderData . '/' . $file);
         }
         $this->insertDataCrawled();
         //dd(self::$dataCrawled);
-    	//$this->initCrawler();
-    	//return true;
+        //$this->initCrawler();
+        //return true;
     }
 
     /**
@@ -65,11 +66,11 @@ class AutoCrawlController extends Controller
      */
     public function initDomain($domain)
     {
-		$this->domain = UrlCraw::where('domain' , $domain)->get();
-		foreach ($this->domain as $url) {
-			$this->url = $url;
-			$this->initCrawler();
-		}
+        $this->domain = UrlCraw::where('domain', $domain)->get();
+        foreach ($this->domain as $url) {
+            $this->url = $url;
+            $this->initCrawler();
+        }
     }
 
     /**
@@ -84,13 +85,15 @@ class AutoCrawlController extends Controller
                 $d['title'] = trim(trim($d['title']));
                 //dump($d['title']);
                 $d['slug'] = $this->khongdau($d['title']);
-                if (Post::whereTranslation('slug' , $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content'])) {
+                if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content'])) {
                     $post = new Post();
                     $post->title = $d['title'];
                     $post->slug = $d['slug'];
                     $post->description = isset($d['description']) ? $d['description'] : '';
                     $post->content = $d['content'];
                     $post->media = $d['image'];
+                    // TODO: Save image to folder first on php side
+                    // TODO : check high defintion Image on php side
                     $post->source_link = $d['link'];
                     $post->save();
                     $post->categories()->attach($this->url->categories()->pluck('id'));
@@ -106,9 +109,9 @@ class AutoCrawlController extends Controller
      */
     public function initCrawler()
     {
-    	$this->crawlTool = $this->crawlTool.'?url='.urlencode($this->url->url).'&json='.urlencode(env('APP_URL').'/upload/rules/'.$this->url->id.'.json');
-    	dump($this->crawlTool);
-	    /*$curl = curl_init();
+        $this->crawlTool = $this->crawlTool . '?url=' . urlencode($this->url->url) . '&json=' . urlencode(env('APP_URL') . '/upload/rules/' . $this->url->id . '.json');
+        dump($this->crawlTool);
+        /*$curl = curl_init();
 		curl_setopt_array($curl, array(
 		    CURLOPT_RETURNTRANSFER => 0,
 		    CURLOPT_URL => $this->crawlTool,
@@ -118,27 +121,26 @@ class AutoCrawlController extends Controller
 
 	    $jsonData = curl_exec($curl);
 	    curl_close($curl);*/
-    	$jsonData = json_decode(file_get_contents('http://localhost:9000/test.json') , true);
-    	dump($jsonData);
-    	foreach ($jsonData as $d) {
-    		
-    		$d['title'] = trim(trim($d['title']));
-    		//dump($d['title']);
-    		$d['slug'] = $this->khongdau($d['title']);
-    		if (Post::whereTranslation('slug' , $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content'])) {
-    			$post = new Post();
-	    		$post->title = $d['title'];
-	    		$post->slug = $d['slug'];
-	    		$post->description = isset($d['description']) ? $d['description'] : '';
-	    		$post->content = $d['content'];
-	    		$post->media = $d['image'];
-	    		$post->source_link = $d['link'];
-	    		$post->save();
-	    		$post->categories()->attach($this->url->categories()->pluck('id'));
-	    		dump($post);
-    		}
-	    		
-    	}
+        $jsonData = json_decode(file_get_contents('http://localhost:9000/test.json'), true);
+        dump($jsonData);
+        foreach ($jsonData as $d) {
+
+            $d['title'] = trim(trim($d['title']));
+            //dump($d['title']);
+            $d['slug'] = $this->khongdau($d['title']);
+            if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content'])) {
+                $post = new Post();
+                $post->title = $d['title'];
+                $post->slug = $d['slug'];
+                $post->description = isset($d['description']) ? $d['description'] : '';
+                $post->content = $d['content'];
+                $post->media = $d['image'];
+                $post->source_link = $d['link'];
+                $post->save();
+                $post->categories()->attach($this->url->categories()->pluck('id'));
+                dump($post);
+            }
+        }
     }
 
     /**
@@ -146,31 +148,27 @@ class AutoCrawlController extends Controller
      * @param  [string|text] $text [input]
      * @return [boolean]       [description]
      */
-    function stringIsNullOrWhitespace($text){
-	    return ctype_space($text) || $text === "" || $text === null;
-	}
+    function stringIsNullOrWhitespace($text)
+    {
+        return ctype_space($text) || $text === "" || $text === null;
+    }
 
-    function dirToArray($dir) {
+    function dirToArray($dir)
+    {
 
         $result = array();
 
         $cdir = scandir($dir);
-        foreach ($cdir as $key => $value)
-        {
-            if (!in_array($value,array(".","..")))
-            {
-                if (is_dir($dir . DIRECTORY_SEPARATOR . $value))
-                {
+        foreach ($cdir as $key => $value) {
+            if (!in_array($value, array(".", ".."))) {
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
                     $result[$value] = dirToArray($dir . DIRECTORY_SEPARATOR . $value);
-                }
-                else
-                {
+                } else {
                     $result[] = $value;
                 }
             }
         }
 
         return $result;
-    } 
-
+    }
 }

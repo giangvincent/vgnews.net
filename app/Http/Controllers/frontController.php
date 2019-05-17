@@ -22,6 +22,7 @@ class frontController extends Controller
         $this->postRepo = new PostRepo();
         $this->dataRepo = new DataRepo();
         $this->layoutRepo = new LayoutRepo();
+        
         $this->layoutRepo->loadNavigator();
     }
     /**
@@ -117,6 +118,7 @@ class frontController extends Controller
      * @param  [string] $query [news article]
      * @return [view]        [list page]
      */
+    // TODO : Make a searchable page , search form
     public function pageSearch($query)
     {
         $this->postRepo->loadPopular();

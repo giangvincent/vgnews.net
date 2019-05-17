@@ -1,3 +1,4 @@
+<!-- TODO : make subcribable form -->
 <!-- Widget Newsletter -->
       <aside class="widget widget_mc4wp_form_widget">
         <h4 class="widget-title">Newsletter</h4>

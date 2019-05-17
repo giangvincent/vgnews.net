@@ -1,1 +1,1 @@
-php artisan serve --port=69
+php artisan serve --port=6969
