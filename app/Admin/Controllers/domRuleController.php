@@ -126,7 +126,9 @@ class domRuleController extends Controller
 
             $form->select('type', 'Type of rule')->options(['detail' => 'Rule for Detail', 'list' => 'Rule for List']);
             $form->text('rule_name', 'Rule Name');
-            $form->parse_rule('Parse Rule');
+            //$form->parse_rule('Parse Rule');
+            $form->json('dom_parse_rule' , 'Parse Rule');
+            $form->json('replace_rule' , 'Replace Parse Rule');
 
             $form->saving(function (Form $form) {
                 if ($form->rule_name != '') {

@@ -6,6 +6,21 @@ $(function() {
   });
 });
 
+$(document).on('keypress' , '#form-searching input' ,function(e) {
+  if( e.keyCode == 13 && $(this).val() != '') {
+    var s_query = encodeURIComponent($(this).val());
+    console.log(s_query);
+    window.location.replace( 's/' + s_query );
+  }
+});
+$(document).on( 'click' , '#form-searching button' , function(e) {
+  e.preventDefault();
+  if( e.keyCode == 13 && $('#form-searching input').val() != '') {
+    var s_query = encodeURIComponent($('#form-searching input').val());
+    window.location.replace('s/' + s_query);
+  }
+});
+
 (function($){
   "use strict";
 

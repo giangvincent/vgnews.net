@@ -118,11 +118,12 @@ class frontController extends Controller
      * @param  [string] $query [news article]
      * @return [view]        [list page]
      */
-    // TODO : Make a searchable page , search form
+
     public function pageSearch($query)
     {
+        $query = urldecode($query);
         $this->postRepo->loadPopular();
-        $postsSearch = Post::whereTranslationLike('title', '%' . $query . '%')->orWhereTranslationLike('slug', '%' . $query . '%')->paginate(8);
-        return view('Frontend.List', compact('postsSearch', 'query'));
+        $posts = Post::whereTranslationLike('title', '%' . $query . '%')->orWhereTranslationLike('slug', '%' . $query . '%')->paginate(8);
+        return view('Frontend.Partials.Content.V1.searchPage', compact('posts', 'query'));
     }
 }

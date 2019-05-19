@@ -18,6 +18,7 @@ Route::get('/' , 'frontController@homePage')->name('front.homePage');
 Route::get('{category}' , 'frontController@catePage')->name('front.categoryList');
 Route::get('tag/{tag}' , 'frontController@tagPage')->name('front.tagList');
 Route::get('p/{slug}_{id}.html' , 'frontController@singlePost')->name('front.detailPage');
+Route::get('s/{query}', 'frontController@pageSearch')->name('front.searching');
 
 Route::get('page/{page}' , 'frontController@singlePage' )->name('front.specPage');
 

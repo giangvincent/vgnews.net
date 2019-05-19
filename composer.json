@@ -9,6 +9,7 @@
         "dimsav/laravel-translatable": "^9.4",
         "encore/laravel-admin": "^1.6",
         "fideloper/proxy": "^4.0",
+        "jxlwqq/json-editor": "^1.0",
         "laravel-admin-ext/backup": "^1.0",
         "laravel-admin-ext/config": "^1.0",
         "laravel-admin-ext/helpers": "^1.1",

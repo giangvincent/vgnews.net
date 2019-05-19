@@ -5,6 +5,7 @@
 const request = require('request');
 
 const fs = require('fs');
+const https = require('https')
 const Xray = require('x-ray');
 const xray = Xray();
 const rulesFolder = '../public/upload/rules/';
@@ -35,18 +36,18 @@ function init(urlCrawl, data_file, filename) {
 				description: xray(data_file.list[i].link_filter, data_file.detail.description),
 				content: xray(data_file.list[i].link_filter, data_file.detail.content + '@html')
 			}]).then(function (data) {
-				//console.log(data)
+				console.log(data)
 				num_push++;
 				for (var d of data) {
 					ret.push(d)
 				}
-
+				console.log(ret)
 				//console.log(data.length)
-				if (num_push == data_file.list.length) {
-					console.log(ret)
-					saveCrawledData(ret, crawledDataFolder, filename)
-					return true;
-				}
+				// if (num_push == data_file.list.length) {
+				// 	console.log(ret)
+				// 	saveCrawledData(ret, crawledDataFolder, filename)
+				// 	return true;
+				// }
 			}).catch(function (err) {
 				console.log(err)
 			})
@@ -65,6 +66,16 @@ function saveCrawledData(data, crawledDataFolder = crawledDataFolder, filename) 
 		stream.write(JSON.stringify(data));
 		stream.end();
 	});
+}
+
+//Node.js Function to save image from External URL.
+function saveImageToDisk(url, localPath) {
+	var fullUrl = url;
+	var file = fs.createWriteStream(localPath);
+	var request = https.get(url, function (response) {
+		response.pipe(file);
+	});
+
 }
 
 // function getListFiles(folder = rulesFolder , callback) {
@@ -100,7 +111,7 @@ readFolder.getListFiles(rulesFolder, function (content, filename) {
 	content = JSON.parse(content)
 	//console.log(content)
 	//for (var i = 0; i < content['url_crawl'].length; i++) {
-		init(content['url_crawl'], content, filename)
+	init(content['url_crawl'], content, filename)
 	//}
 
 });
