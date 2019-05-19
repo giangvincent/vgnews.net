@@ -1,3 +1,4 @@
+<?php dump($nav); ?>
 <ul class="nav__dropdown-menu">
 	<li><a href="about.html">About</a></li>
 	<li><a href="contact.html">Contact</a></li>
