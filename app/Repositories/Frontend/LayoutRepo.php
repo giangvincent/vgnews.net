@@ -21,9 +21,16 @@ class LayoutRepo extends Controller
 	 */
 	public function loadNavigator()
     {
-        $navs = Navigation::displayNavs();
+		
+		$navs = json_decode(file_get_contents('contents/'.\App::getLocale().'/navigation.json'), true);
+		//dump($navs);
         view()->share('navs' , $navs);
-    }
+	}
+	
+	public function loadNavsRecursive()
+	{
+		
+	}
 
 	public function loadFooterLayout()
 	{

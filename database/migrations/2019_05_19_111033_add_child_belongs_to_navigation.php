@@ -14,6 +14,11 @@ class AddChildBelongsToNavigation extends Migration
     public function up()
     {
         // TODO : add child belongs to navigation menu
+        Schema::table('navigations', function($table) {
+            $table->renameColumn('is_parent', 'is_root');
+            $table->integer('parent');
+            
+        });
     }
 
     /**
@@ -23,6 +28,9 @@ class AddChildBelongsToNavigation extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('navigations', function($table) {
+            $table->renameColumn('is_root', 'is_parent');
+            $table->dropColumn('parent');
+        });
     }
 }

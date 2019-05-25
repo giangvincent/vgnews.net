@@ -11,10 +11,10 @@
     <!-- Main Content Side Nav -->
     <nav class="sidenav__menu-container">
       <ul class="sidenav__menu" role="menubar">
-        @foreach($navs->get() as $nav)
+        @foreach($navs as $nav)
         <li>
-          <a href="{{ $nav->url }}">{{ $nav->name_display }}</a>
-          @if($nav->is_parent)
+          <a href="{{ $nav['url'] }}" class="sidenav__menu-url">{{ $nav['name_display'] }}</a>
+          @if(count($nav['menu']) > 0)
           <button class="sidenav__menu-toggle" aria-haspopup="true" aria-label="Open dropdown"><i class="ui-arrow-down"></i></button>
           @include('Frontend.Layouts.SidenavChild')
           @endif

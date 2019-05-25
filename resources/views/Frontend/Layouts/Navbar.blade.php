@@ -21,11 +21,11 @@
             <!-- Nav-wrap -->
             <nav class="flex-child nav__wrap d-none d-lg-block">              
               <ul class="nav__menu">
-                @foreach($navs->get() as $nav)
-                <li class="{{ ($nav->is_parent) ? 'nav__dropdown' : '' }}">
-                  <a href="{{ $nav->url }}">{{ $nav->name_display }}</a>
-                  @if($nav->is_parent)
-                    @if($nav->type == 'mega')
+                @foreach($navs as $nav)
+                <li class="{{ count($nav['menu']) > 0 ? 'nav__dropdown' : '' }}">
+                  <a href="{{ $nav['url'] }}">{{ $nav['name_display'] }}</a>
+                  @if(count($nav['menu']) > 0)
+                    @if($nav['type'] == 'mega')
                       @include('Frontend.Layouts.NavbarChildMega')
                     @else
                       @include('Frontend.Layouts.NavbarChild')

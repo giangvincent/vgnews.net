@@ -10,6 +10,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use App\Repositories\Backend\SaveFileNavs;
 
 class navController extends Controller
 {
@@ -92,7 +93,7 @@ class navController extends Controller
      *
      * @return Grid
      */
-    // TODO : add recursive Parent child navigation to navigation menu 
+
     protected function grid()
     {
         return Admin::grid(Navigation::class, function (Grid $grid) {
@@ -122,15 +123,28 @@ class navController extends Controller
                 'off' => ['value' => 'pending', 'text' => 'Pending', 'color' => 'warning'],
             ];
             $form->switch('status' , 'Post Status')->states($states);
+            
             $form->text('name_display' , 'Name Nav');
             $form->text('url' , 'URL');
             $form->textarea('description' , 'Description');
 
+            $root_states = [
+                'on'  => ['value' => 1, 'text' => 'Root', 'color' => 'info'],
+                'off' => ['value' => 0, 'text' => 'Normal', 'color' => 'default'],
+            ];
+            $form->switch('is_root' , 'Root Menu')->states($root_states);
+            
             $form->select('type' , 'Navigation type')->options(['normal' => 'normal', 'mega' => 'mega']);
             $form->number('pos' , 'Position Navigation');
+            $form->number('parent' , 'Parent');
             $form->text('page_title' , 'Page title');
             $form->text('page_keyword' , 'Page keyword');
             $form->textarea('page_description' , 'Page description');
+
+            $form->saved(function (Form $form) { 
+                $navs = new SaveFileNavs();
+                $navs->loadRoot();
+            });
             
         });
     }
