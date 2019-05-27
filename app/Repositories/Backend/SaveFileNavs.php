@@ -15,7 +15,7 @@ class SaveFileNavs extends Controller
 
     public function loadRoot()
     {
-        $navs = Navigation::translated(\App::getLocale())->where('status', 'publish')->where('is_root', 1)->orderBy('pos', 'desc')->get()->toArray();
+        $navs = Navigation::translated(\App::getLocale())->where('status', 'publish')->where('is_root', 1)->orderBy('pos', 'asc')->get()->toArray();
         $this->navArr = $navs;
         for ($i = 0; $i < count($this->navArr); $i++) {
             $this->navArr[$i]['menu'] = $this->recursiveNavs($this->navArr[$i]);
@@ -34,7 +34,7 @@ class SaveFileNavs extends Controller
     public function recursiveNavs($parent)
     {
         //dump($parent);
-        $navrecurNavArrs = Navigation::translated(\App::getLocale())->where('status', 'publish')->where('is_root', '<>', 1)->where('parent', $parent['id'])->orderBy('pos', 'desc')->get()->toArray();
+        $navrecurNavArrs = Navigation::translated(\App::getLocale())->where('status', 'publish')->where('is_root', '<>', 1)->where('parent', $parent['id'])->orderBy('pos', 'asc')->get()->toArray();
 
         for ($i = 0; $i < count($navrecurNavArrs); $i++) {
             $navrecurNavArrs[$i]['menu'] = $this->recursiveNavs($navrecurNavArrs[$i]);
