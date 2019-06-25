@@ -11,6 +11,11 @@ const xray = Xray();
 const rulesFolder = '../public/upload/rules/';
 const crawledDataFolder = '../public/upload/crawledData/';
 
+// require dom js
+// const jsdom = require("jsdom");
+// const { JSDOM } = jsdom;
+const cheerio = require('cheerio')
+
 let db = require('./dbConfig.js')
 let readFolder = require('./folderRead.js')
 
@@ -36,18 +41,37 @@ function init(urlCrawl, data_file, filename) {
 				description: xray(data_file.list[i].link_filter, data_file.detail.description),
 				content: xray(data_file.list[i].link_filter, data_file.detail.content + '@html')
 			}]).then(function (data) {
-				console.log(data)
+				//console.log(data)
 				num_push++;
 				for (var d of data) {
-					ret.push(d)
+					// load dom for every data crawled
+					// var dom = new JSDOM(d.content);
+					// const document = dom.window.document;
+					// var all = document.getElementsByTagName("*");
+					// //console.log(all)
+					// for (var i = 0, max = all.length; i < max; i++) {
+					// 	console.log(all[i].getAttribute('src'))
+					// }
+					if (typeof d.content !== 'undefined' && d.content !== null) {
+						makeContent( d.content , {} , (content) => {
+							//d.content = content;
+							console.log(content)
+							
+						});
+						process.exit()
+						ret.push(d)
+					}
+					
+					
 				}
-				console.log(ret)
+				//console.log(ret)
 				//console.log(data.length)
-				// if (num_push == data_file.list.length) {
-				// 	console.log(ret)
-				// 	saveCrawledData(ret, crawledDataFolder, filename)
-				// 	return true;
-				// }
+
+				/* if (num_push == data_file.list.length) {
+					console.log(ret)
+					saveCrawledData(ret, crawledDataFolder, filename)
+					return true;
+				} */
 			}).catch(function (err) {
 				console.log(err)
 			})
@@ -57,6 +81,33 @@ function init(urlCrawl, data_file, filename) {
 	}
 }
 
+function makeContent (content , data = {} , callback) {
+	const $ = cheerio.load(content);
+	var exceptEle = ['html', 'body', 'head'];
+	$("*").each((index, ele) => {
+		if (exceptEle.indexOf(ele.name) == -1) {
+			// console.log(ele.name)
+			if ($(ele).find('img').length) {
+				console.log($(ele).find('img').attr('src'));
+				var image_src = $(ele).find('img').attr('src');
+				saveImageToDisk(image_src , )
+			} else {
+				console.log($(ele).text())
+			}
+		}
+		// console.log(index, $(ele).text())
+	})
+	return callback({
+		success: true
+	})
+}
+
+/**
+ * save crawled data, include only text and images
+ * @param {*} data 
+ * @param {*} crawledDataFolder 
+ * @param {*} filename 
+ */
 function saveCrawledData(data, crawledDataFolder = crawledDataFolder, filename) {
 	if (!fs.existsSync(crawledDataFolder + filename.replace('.json', ''))) {
 		fs.mkdirSync(crawledDataFolder + filename.replace('.json', ''));
@@ -70,12 +121,11 @@ function saveCrawledData(data, crawledDataFolder = crawledDataFolder, filename) 
 
 //Node.js Function to save image from External URL.
 function saveImageToDisk(url, localPath) {
-	var fullUrl = url;
 	var file = fs.createWriteStream(localPath);
 	var request = https.get(url, function (response) {
 		response.pipe(file);
 	});
-
+	return request;
 }
 
 // function getListFiles(folder = rulesFolder , callback) {
