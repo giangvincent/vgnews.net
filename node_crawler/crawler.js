@@ -60,7 +60,7 @@ function init(urlCrawl, data_file, filename) {
 							console.log(content)
 
 						});
-						
+						// process.exit()
 						ret.push(d)
 					}
 
@@ -87,23 +87,20 @@ function makeContent(content, data = {}, callback) {
 	const $ = cheerio.load(content);
 	var exceptEle = ['html', 'body', 'head'];
 	var images = [];
-	var savedImg = 0;
 	$("*").each((index, ele) => {
 		if (exceptEle.indexOf(ele.name) == -1) {
 			// console.log(ele.name)
 			if ($(ele).find('img').length) {
-				// console.log($(ele).find('img').attr('src'));
+				console.log($(ele).find('img').attr('src'));
 				var image_src = $(ele).find('img').attr('src');
 				// console.log(mimeTypes.detectExtension(image_src))
-				if (images.indexOf(image_src) < 0) {
+				if (images.indexOf(image_src) < 0 && isURL(image_src)) {
 					images.push(image_src)
-					saveImageToDisk(image_src  , '../public/upload/images/' + randStr(20) + '.' + ((getExtension(image_src) != '' && getExtension(image_src) != null) ? getExtension(image_src) : 'jpg')).then(() => {
-						console.log('done save image')
-					})
+					saveImageToDisk(image_src  , '../public/upload/images/' + randStr(20) + '.' + ((getExtension(image_src) != '' && getExtension(image_src) != null) ? getExtension(image_src) : 'jpg'))
 				}
 				
 			} else {
-				// console.log($(ele).text())
+				console.log($(ele).text())
 			}
 		}
 		// console.log(index, $(ele).text())
@@ -146,21 +143,22 @@ function saveCrawledData(data, crawledDataFolder = crawledDataFolder, filename) 
 //Node.js Function to save image from External URL.
 function saveImageToDisk(url, localPath) {
 	var file = fs.createWriteStream(localPath);
-	return new Promise((res, rej) => {
-		https.get(url, function (response) {
-			response.pipe(file).on('finish', () => {
-				console.log('saved')
-				res()
-			})
-			.on('error', err => {
-				file.end();
-				
-				console.error(err);
-				rej(err)
-			});
+	https.get(url, function (response) {
+		response.pipe(file).on('finish', () => {
+			console.log('saved images #', url)
+		})
+		.on('error', err => {
+			file.end();
+			console.error(err);
 		});
-	})
+	});
 	
+}
+
+function isURL(str) {
+	var urlRegex = '^(?!mailto:)(?:(?:http|https|ftp)://)(?:\\S+(?::\\S*)?@)?(?:(?:(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[0-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]+-?)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,})))|localhost)(?::\\d{2,5})?(?:(/|\\?|#)[^\\s]*)?$';
+	var url = new RegExp(urlRegex, 'i');
+	return str.length < 2083 && url.test(str);
 }
 
 function getExtension(filename) {
