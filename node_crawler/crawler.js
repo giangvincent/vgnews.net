@@ -4,9 +4,11 @@
  */
 const request = require('request');
 
+const path = require('path');
 const fs = require('fs');
 const https = require('https')
 const Xray = require('x-ray');
+const mimeTypes = require('mimetypes');
 const xray = Xray();
 const rulesFolder = '../public/upload/rules/';
 const crawledDataFolder = '../public/upload/crawledData/';
@@ -53,16 +55,16 @@ function init(urlCrawl, data_file, filename) {
 					// 	console.log(all[i].getAttribute('src'))
 					// }
 					if (typeof d.content !== 'undefined' && d.content !== null) {
-						makeContent( d.content , {} , (content) => {
+						makeContent(d.content, {}, (content) => {
 							//d.content = content;
 							console.log(content)
-							
+
 						});
-						process.exit()
+						
 						ret.push(d)
 					}
-					
-					
+
+
 				}
 				//console.log(ret)
 				//console.log(data.length)
@@ -81,18 +83,27 @@ function init(urlCrawl, data_file, filename) {
 	}
 }
 
-function makeContent (content , data = {} , callback) {
+function makeContent(content, data = {}, callback) {
 	const $ = cheerio.load(content);
 	var exceptEle = ['html', 'body', 'head'];
+	var images = [];
+	var savedImg = 0;
 	$("*").each((index, ele) => {
 		if (exceptEle.indexOf(ele.name) == -1) {
 			// console.log(ele.name)
 			if ($(ele).find('img').length) {
-				console.log($(ele).find('img').attr('src'));
+				// console.log($(ele).find('img').attr('src'));
 				var image_src = $(ele).find('img').attr('src');
-				saveImageToDisk(image_src , )
+				// console.log(mimeTypes.detectExtension(image_src))
+				if (images.indexOf(image_src) < 0) {
+					images.push(image_src)
+					saveImageToDisk(image_src  , '../public/upload/images/' + randStr(20) + '.' + ((getExtension(image_src) != '' && getExtension(image_src) != null) ? getExtension(image_src) : 'jpg')).then(() => {
+						console.log('done save image')
+					})
+				}
+				
 			} else {
-				console.log($(ele).text())
+				// console.log($(ele).text())
 			}
 		}
 		// console.log(index, $(ele).text())
@@ -102,6 +113,19 @@ function makeContent (content , data = {} , callback) {
 	})
 }
 
+/**
+ * create random string
+ * @param {*} length 
+ */
+function randStr(length) {
+	var result = '';
+	var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var charactersLength = characters.length;
+	for (var i = 0; i < length; i++) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
+}
 /**
  * save crawled data, include only text and images
  * @param {*} data 
@@ -122,10 +146,26 @@ function saveCrawledData(data, crawledDataFolder = crawledDataFolder, filename) 
 //Node.js Function to save image from External URL.
 function saveImageToDisk(url, localPath) {
 	var file = fs.createWriteStream(localPath);
-	var request = https.get(url, function (response) {
-		response.pipe(file);
-	});
-	return request;
+	return new Promise((res, rej) => {
+		https.get(url, function (response) {
+			response.pipe(file).on('finish', () => {
+				console.log('saved')
+				res()
+			})
+			.on('error', err => {
+				file.end();
+				
+				console.error(err);
+				rej(err)
+			});
+		});
+	})
+	
+}
+
+function getExtension(filename) {
+    var ext = path.extname(filename || '').split('.');
+    return ext[ext.length - 1];
 }
 
 // function getListFiles(folder = rulesFolder , callback) {
