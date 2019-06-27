@@ -55,25 +55,34 @@ function init(urlCrawl, data_file, filename) {
 					// 	console.log(all[i].getAttribute('src'))
 					// }
 					if (typeof d.content !== 'undefined' && d.content !== null) {
+						d.title = cleanText(d.title)
+						d.description = cleanText(d.description)
+
+						var imageName = '../public/upload/images/' + randStr(20) + '.' + ((getExtension(d.image) != '' && getExtension(d.image) != null) ? getExtension(d.image) : 'jpg')
+						saveImageToDisk(d.image, imageName);
+						d.image = imageName
+
 						makeContent(d.content, {}, (content) => {
 							//d.content = content;
-							console.log(content)
-
+							// console.log(content)
+							if (content.success) {
+								d.content = content.data.join('')
+								ret.push(d)
+							}
+							
 						});
 						// process.exit()
-						ret.push(d)
+						
 					}
-
-
 				}
 				//console.log(ret)
 				//console.log(data.length)
 
-				/* if (num_push == data_file.list.length) {
-					console.log(ret)
+				if (num_push == data_file.list.length) {
+					// console.log(ret)
 					saveCrawledData(ret, crawledDataFolder, filename)
 					return true;
-				} */
+				}
 			}).catch(function (err) {
 				console.log(err)
 			})
@@ -83,30 +92,50 @@ function init(urlCrawl, data_file, filename) {
 	}
 }
 
+function cleanText(text) {
+	if (typeof text !== 'undefined') {
+		return text.trim().replace('\t', '').replace('\r', '').replace('\n', '')
+	} else return '';
+	
+}
+
 function makeContent(content, data = {}, callback) {
 	const $ = cheerio.load(content);
 	var exceptEle = ['html', 'body', 'head'];
 	var images = [];
+	var texts = [];
+	var retContent = [];
 	$("*").each((index, ele) => {
 		if (exceptEle.indexOf(ele.name) == -1) {
 			// console.log(ele.name)
 			if ($(ele).find('img').length) {
-				console.log($(ele).find('img').attr('src'));
+				// console.log($(ele).find('img').attr('src'));
 				var image_src = $(ele).find('img').attr('src');
 				// console.log(mimeTypes.detectExtension(image_src))
 				if (images.indexOf(image_src) < 0 && isURL(image_src)) {
 					images.push(image_src)
-					saveImageToDisk(image_src  , '../public/upload/images/' + randStr(20) + '.' + ((getExtension(image_src) != '' && getExtension(image_src) != null) ? getExtension(image_src) : 'jpg'))
+					var imageName = '../public/upload/images/' + randStr(20) + '.' + ((getExtension(image_src) != '' && getExtension(image_src) != null) ? getExtension(image_src) : 'jpg')
+					saveImageToDisk(image_src, imageName);
+					var imgContent = '<div><p><img src="' + imageName + '"></p></div>'
+					retContent.push(imgContent)
 				}
 				
 			} else {
-				console.log($(ele).text())
+				var text = cleanText($(ele).text())
+				if (texts.indexOf(text) < 0 && text != '') {
+					texts.push(text)
+					var textContent = '<div><p>' + text + '</p></div>';
+					retContent.push(textContent)
+				}
+				
+				// console.log($(ele).text())
 			}
 		}
 		// console.log(index, $(ele).text())
 	})
 	return callback({
-		success: true
+		success: true,
+		data: retContent
 	})
 }
 
