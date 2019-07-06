@@ -92,6 +92,10 @@ class AutoCrawlController extends Controller
                     $post->description = isset($d['description']) ? $d['description'] : '';
                     $post->content = $d['content'];
                     $post->media = $d['image'];
+                    list($width, $height) = getimagesize($d['image']);
+                    if ($width < 1 || $height < 1) {
+                        continue;
+                    }
                     // TODO: Save image to folder first on php side
                     // TODO : check high defintion Image on php side
                     $post->source_link = $d['link'];
@@ -128,12 +132,13 @@ class AutoCrawlController extends Controller
             $d['title'] = trim(trim($d['title']));
             //dump($d['title']);
             $d['slug'] = $this->khongdau($d['title']);
-            if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content'])) {
+            if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) && file_exists($d['image'])) {
                 $post = new Post();
                 $post->title = $d['title'];
                 $post->slug = $d['slug'];
                 $post->description = isset($d['description']) ? $d['description'] : '';
                 $post->content = $d['content'];
+
                 $post->media = $d['image'];
                 $post->source_link = $d['link'];
                 $post->save();
@@ -170,5 +175,23 @@ class AutoCrawlController extends Controller
         }
 
         return $result;
+    }
+
+    function checkRemoteFile($url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        // don't download content
+        curl_setopt($ch, CURLOPT_NOBODY, 1);
+        curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        if ($result !== FALSE) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

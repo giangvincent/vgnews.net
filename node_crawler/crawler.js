@@ -59,8 +59,14 @@ function init(urlCrawl, data_file, filename) {
 						d.description = cleanText(d.description)
 
 						var imageName = '../public/upload/images/' + randStr(20) + '.' + ((getExtension(d.image) != '' && getExtension(d.image) != null) ? getExtension(d.image) : 'jpg')
-						saveImageToDisk(d.image, imageName);
-						d.image = imageName
+						if (typeof data_file.regex_image != 'undefined' && data_file.regex_image != '') {
+							
+							eval('var fullsizeImage = d.image.replace(/'+ data_file.regex_image +'/g , "")');
+						} else {
+							var fullsizeImage = d.image
+						}
+						saveImageToDisk(fullsizeImage, imageName);
+						d.image = imageName.replace('../public/' , '')
 
 						makeContent(d.content, {}, (content) => {
 							//d.content = content;
