@@ -66,7 +66,7 @@ function init(urlCrawl, data_file, filename) {
 							var fullsizeImage = d.image
 						}
 						saveImageToDisk(fullsizeImage, imageName);
-						d.image = imageName.replace('../public/' , '')
+						d.image = imageName.replace('../public/upload/' , '')
 
 						makeContent(d.content, {}, (content) => {
 							//d.content = content;
@@ -122,6 +122,7 @@ function makeContent(content, data = {}, callback) {
 					images.push(image_src)
 					var imageName = '../public/upload/images/' + randStr(20) + '.' + ((getExtension(image_src) != '' && getExtension(image_src) != null) ? getExtension(image_src) : 'jpg')
 					saveImageToDisk(image_src, imageName);
+					imageName = imageName.replace('../public/upload/' , '')
 					var imgContent = '<div><p><img src="' + imageName + '"></p></div>'
 					retContent.push(imgContent)
 				}

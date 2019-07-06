@@ -48,7 +48,7 @@ class AutoCrawlController extends Controller
 
         foreach ($allFileData as $file) {
             $timeCrawl = explode('.', $file);
-            dump(date('d M ,Y', $timeCrawl[0]));
+            // dump(date('d M ,Y', $timeCrawl[0]));
             $data = json_decode(file_get_contents(self::$folderData . '/' . $file), true);
             array_push(self::$dataCrawled, $data);
             unlink(self::$folderData . '/' . $file);
@@ -85,15 +85,16 @@ class AutoCrawlController extends Controller
                 $d['title'] = trim(trim($d['title']));
                 //dump($d['title']);
                 $d['slug'] = $this->khongdau($d['title']);
-                if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content'])) {
+                if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) && file_exists('upload/'.$d['image'])) {
                     $post = new Post();
                     $post->title = $d['title'];
                     $post->slug = $d['slug'];
                     $post->description = isset($d['description']) ? $d['description'] : '';
                     $post->content = $d['content'];
                     $post->media = $d['image'];
-                    list($width, $height) = getimagesize($d['image']);
+                    list($width, $height) = getimagesize('upload/'.$d['image']);
                     if ($width < 1 || $height < 1) {
+                        echo 'image illegal!. <br>';
                         continue;
                     }
                     // TODO: Save image to folder first on php side
@@ -102,7 +103,7 @@ class AutoCrawlController extends Controller
                     $post->save();
                     $post->categories()->attach($this->url->categories()->pluck('id'));
                     //dump($post);
-                }
+                } else echo 'Something missing or post existed. <br>';
             }
         }
     }
@@ -132,7 +133,7 @@ class AutoCrawlController extends Controller
             $d['title'] = trim(trim($d['title']));
             //dump($d['title']);
             $d['slug'] = $this->khongdau($d['title']);
-            if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) && file_exists($d['image'])) {
+            if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) ) {
                 $post = new Post();
                 $post->title = $d['title'];
                 $post->slug = $d['slug'];
