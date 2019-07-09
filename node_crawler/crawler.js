@@ -3,7 +3,6 @@
  * @type {[type]}
  */
 const request = require('request');
-
 const path = require('path');
 const fs = require('fs');
 const https = require('https')
@@ -18,11 +17,10 @@ const crawledDataFolder = '../public/upload/crawledData/';
 // const { JSDOM } = jsdom;
 const cheerio = require('cheerio')
 
-let db = require('./dbConfig.js')
+let db = require('./dbConfig')
 let readFolder = require('./folderRead.js')
 
 function init(urlCrawl, data_file, filename) {
-
 	// file json of the crawl json rule
 	//var file = decodeURIComponent(req.query.json);
 	//var temp_file = './1.json';
@@ -46,19 +44,11 @@ function init(urlCrawl, data_file, filename) {
 				//console.log(data)
 				num_push++;
 				for (var d of data) {
-					// load dom for every data crawled
-					// var dom = new JSDOM(d.content);
-					// const document = dom.window.document;
-					// var all = document.getElementsByTagName("*");
-					// //console.log(all)
-					// for (var i = 0, max = all.length; i < max; i++) {
-					// 	console.log(all[i].getAttribute('src'))
-					// }
-					if (typeof d.content !== 'undefined' && d.content !== null) {
-						d.title = cleanText(d.title)
+					d.title = cleanText(d.title)
+					if (typeof d.content !== 'undefined' && d.content !== null && db('post_translations').where('title', d.title)) {
+						// d.title = cleanText(d.title)
 						d.description = cleanText(d.description)
-
-						var imageName = '../public/upload/images/' + randStr(20) + '.' + ((getExtension(d.image) != '' && getExtension(d.image) != null) ? getExtension(d.image) : 'jpg')
+						/* var imageName = '../public/upload/images/' + randStr(20) + '.' + ((getExtension(d.image) != '' && getExtension(d.image) != null) ? getExtension(d.image) : 'jpg')
 						if (typeof data_file.regex_image != 'undefined' && data_file.regex_image != '') {
 							
 							eval('var fullsizeImage = d.image.replace(/'+ data_file.regex_image +'/g , "")');
@@ -66,8 +56,7 @@ function init(urlCrawl, data_file, filename) {
 							var fullsizeImage = d.image
 						}
 						saveImageToDisk(fullsizeImage, imageName);
-						d.image = imageName.replace('../public/upload/' , '')
-
+						d.image = imageName.replace('../public/upload/' , '') */
 						makeContent(d.content, {}, (content) => {
 							//d.content = content;
 							// console.log(content)
@@ -75,10 +64,8 @@ function init(urlCrawl, data_file, filename) {
 								d.content = content.data.join('')
 								ret.push(d)
 							}
-							
 						});
 						// process.exit()
-						
 					}
 				}
 				//console.log(ret)

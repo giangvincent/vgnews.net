@@ -10,6 +10,9 @@ use App\Model\Content\Post;
 use App\Model\Content\Category;
 use App\Model\Content\Tag;
 
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
+
 /*
 Declare the class for auto crawl by cronjob in the future
 将来通过cronjob声明自动爬行的类
@@ -26,6 +29,29 @@ class AutoCrawlController extends Controller
     * @domain : crawl from domain which mean contain many different url
      */
     protected $domain = '';
+
+    protected $imageTypeArray = array
+    (
+        0=>'UNKNOWN',
+        1=>'GIF',
+        2=>'JPEG',
+        3=>'PNG',
+        4=>'SWF',
+        5=>'PSD',
+        6=>'BMP',
+        7=>'TIFF_II',
+        8=>'TIFF_MM',
+        9=>'JPC',
+        10=>'JP2',
+        11=>'JPX',
+        12=>'JB2',
+        13=>'SWC',
+        14=>'IFF',
+        15=>'WBMP',
+        16=>'XBM',
+        17=>'ICO',
+        18=>'COUNT' 
+    );
 
     static public $dataCrawled = array();
     static public $folderData = '/upload/crawledData/';
@@ -85,25 +111,33 @@ class AutoCrawlController extends Controller
                 $d['title'] = trim(trim($d['title']));
                 //dump($d['title']);
                 $d['slug'] = $this->khongdau($d['title']);
-                if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) && file_exists('upload/'.$d['image'])) {
+                if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) && checkRemoteFile($d['image'])) {
                     $post = new Post();
                     $post->title = $d['title'];
                     $post->slug = $d['slug'];
                     $post->description = isset($d['description']) ? $d['description'] : '';
                     $post->content = $d['content'];
-                    $post->media = $d['image'];
-                    list($width, $height) = getimagesize('upload/'.$d['image']);
+                    
+                    list($width, $height , $image_type) = getimagesize($d['image']);
                     if ($width < 1 || $height < 1) {
                         echo 'image illegal!. <br>';
                         continue;
                     }
+                    $external_image = file_get_contents($d['image']);
+                    $imageName = 'images/'.$this->generateRandomString().$image_type;
+                    Storage::disk('public')->put( $imageName , $external_image, 'public');
+
+                    $post->media = $imageName;
                     // TODO: Save image to folder first on php side
                     // TODO : check high defintion Image on php side
                     $post->source_link = $d['link'];
+                    $post->status = 'publish';
                     $post->save();
                     $post->categories()->attach($this->url->categories()->pluck('id'));
                     //dump($post);
-                } else echo 'Something missing or post existed. <br>';
+                } else {
+                    
+                }
             }
         }
     }

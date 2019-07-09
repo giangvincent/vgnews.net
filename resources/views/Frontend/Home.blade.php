@@ -7,10 +7,6 @@
 
 @section('Main_content')
 
-<?php 
-
-?>
-
 @include('Frontend.Partials.Content.V1.Home.Trending')
 @include('Frontend.Partials.Content.V1.Home.Feature')
 
@@ -45,25 +41,21 @@
     </div>
 
     @include('Frontend.Partials.Content.V1.Home.CarouselPosts')
-
     @include('Frontend.Partials.Content.V1.Home.CategoriesPosts')
 
     {{-- @include('Frontend.Partials.Content.V1.Home.VideoPosts') --}}
-
     <!-- Content Secondary -->
     <div class="row">
-
       <!-- Posts -->
       <div class="col-lg-8 blog__content mb-72">
 
         @include('Frontend.Partials.Content.V1.Home.PaginatePosts')
 
       </div> <!-- end posts -->
-      
+
       @include('Frontend.Partials.Content.V1.Sidebar.BottomSidebar')
-      
-    </div> <!-- content secondary -->      
-    
+
+    </div> <!-- content secondary --> 
 
   </div> <!-- end main container -->
   @endsection

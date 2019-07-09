@@ -4,7 +4,7 @@ const knex = require('knex')({
 		host : '127.0.0.1',
 		user : 'root',
 		password : '',
-		database : 'lar_vgnews1'
+		database : 'lar_vgnews'
 	}
 });
 

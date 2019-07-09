@@ -5,6 +5,7 @@
 
     <div class="tabs tab-post__tabs"> 
       <ul class="tabs__list">
+        
         @foreach($catsNews as $latestByCat)
         <li class="tabs__item {{ ($loop->index == 0) ? 'tabs__item--active' : '' }} ">
           <a href="#tab-{{ $latestByCat['cat']->slug }}" class="tabs__trigger">{{ $latestByCat['cat']->title }}</a>
