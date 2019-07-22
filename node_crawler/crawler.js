@@ -85,6 +85,10 @@ function init(urlCrawl, data_file, filename) {
 	}
 }
 
+function checkExistedDb () {
+	
+}
+
 function cleanText(text) {
 	if (typeof text !== 'undefined') {
 		return text.trim().replace('\t', '').replace('\r', '').replace('\n', '')
