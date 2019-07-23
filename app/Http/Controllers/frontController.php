@@ -78,7 +78,7 @@ class frontController extends Controller
     public function tagPage($tag)
     {
         $this->postRepo->loadPopular();
-        $tagDb = Tag::whereTranslation('slug', $category)->first();
+        $tagDb = Tag::whereTranslation('slug', $tag)->first();
         $posts = $tagDb->posts()->orderBy('id', 'desc')->paginate(8);
         //dump($postsByTag);
         return view('Frontend.List', compact('posts',  'tagDb'));
