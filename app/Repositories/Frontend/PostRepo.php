@@ -144,8 +144,9 @@ class PostRepo extends Controller
 	 * @param  [array] $loaded_ids [loaded news id]
 	 * @return [view] view blade for paginate news
 	 */
-	public function ajaxPostWithPagination($loaded_ids)
+	public function ajaxPostWithPagination($page)
 	{
+		$loaded_ids = $this->loaded_ids;
 		$postsWithPagination = Post::whereNotIn('id', $loaded_ids)->whereHas('translations', function ($q) {
 			$q->where('locale', \App::getLocale())->orderBy('id', 'desc')->orderBy('updated_at', 'desc');
 		});

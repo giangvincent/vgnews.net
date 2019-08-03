@@ -52,5 +52,22 @@ class DataRepo extends Controller
 	{
 		
 	}
+	/**
+	 * load categories list for widget sidebar
+	 */
+	public function loadCates()
+	{
+		$cats = Category::with('posts')->get();
+		view()->share('catsWidget', $cats);
+	}
+
+	/**
+	 * load layouts
+	 */
+	public function loadLayouts()
+	{
+		$layouts = Layout::all();
+		view()->share('layouts', $layouts);
+	}
 }
 ?>

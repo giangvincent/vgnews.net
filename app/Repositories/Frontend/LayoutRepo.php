@@ -15,6 +15,12 @@ class LayoutRepo extends Controller
 	{
 		# code...
 	}
+
+	public function loadPrimaryLayouts()
+	{
+		$this->loadNavigator();
+		$this->loadFooterLayout();
+	}
 	/**
 	 * [loadNavigator load published navigator has been saved in database]
 	 * @return view object : share the object data to the whole website
@@ -34,7 +40,9 @@ class LayoutRepo extends Controller
 
 	public function loadFooterLayout()
 	{
-		# code...
+		$footer = Layout::where('pos', 'footer')->first();
+		// dump($footer);
+		view()->share('footer' , $footer);
 	}
 
 	public function loadSingleSocial()

@@ -5,7 +5,8 @@
             <h3 class="section-title">Worldwide</h3>
             <a href="#" class="all-posts-url">View All</a>
           </div>
-
+          <?php dump($postsWithPagination); ?>
+          @foreach ($postsWithPagination as $post)
           <article class="entry card post-list">
             <div class="entry__img-holder post-list__img-holder card__img-holder" style="background-image: url(img/content/list/list_post_1.jpg)">
               <a href="single-post.html" class="thumb-url"></a>
@@ -33,146 +34,8 @@
               </div>
             </div>
           </article>
-
-          <article class="entry card post-list">
-            <div class="entry__img-holder post-list__img-holder card__img-holder" style="background-image: url(img/content/list/list_post_2.jpg)">
-              <a href="single-post.html" class="thumb-url"></a>
-              <img src="img/content/list/list_post_2.jpg" alt="" class="entry__img d-none">
-              <a href="categories.html" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--purple">Fashion</a>
-            </div>
-
-            <div class="entry__body post-list__body card__body">
-              <div class="entry__header">
-                <h2 class="entry__title">
-                  <a href="single-post.html">This Co-Working Space is a One-Stop Shop</a>
-                </h2>
-                <ul class="entry__meta">
-                  <li class="entry__meta-author">
-                    <span>by</span>
-                    <a href="#">DeoThemes</a>
-                  </li>
-                  <li class="entry__meta-date">
-                    Jan 21, 2018
-                  </li>
-                </ul>
-              </div>        
-              <div class="entry__excerpt">
-                <p>iPrice Group report offers insights on daily e-commerce activity in the ...</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="entry card post-list">
-            <div class="entry__img-holder post-list__img-holder card__img-holder" style="background-image: url(img/content/list/list_post_3.jpg)">
-              <a href="single-post.html" class="thumb-url"></a>
-              <img src="img/content/list/list_post_3.jpg" alt="" class="entry__img d-none">
-              <a href="categories.html" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--orange">Mining</a>
-            </div>
-
-            <div class="entry__body post-list__body card__body">
-              <div class="entry__header">
-                <h2 class="entry__title">
-                  <a href="single-post.html">This 6-Year-Old Kid Reportedly Earned US$11 Million on YouTube</a>
-                </h2>
-                <ul class="entry__meta">
-                  <li class="entry__meta-author">
-                    <span>by</span>
-                    <a href="#">DeoThemes</a>
-                  </li>
-                  <li class="entry__meta-date">
-                    Jan 21, 2018
-                  </li>
-                </ul>
-              </div>        
-              <div class="entry__excerpt">
-                <p>iPrice Group report offers insights on daily e-commerce activity in the ...</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="entry card post-list">
-            <div class="entry__img-holder post-list__img-holder card__img-holder" style="background-image: url(img/content/list/list_post_4.jpg)">
-              <a href="single-post.html" class="thumb-url"></a>
-              <img src="img/content/list/list_post_4.jpg" alt="" class="entry__img d-none">
-              <a href="categories.html" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--violet">World</a>
-            </div>
-
-            <div class="entry__body post-list__body card__body">
-              <div class="entry__header">
-                <h2 class="entry__title">
-                  <a href="single-post.html">Rating Agency Breaks with Financial Community </a>
-                </h2>
-                <ul class="entry__meta">
-                  <li class="entry__meta-author">
-                    <span>by</span>
-                    <a href="#">DeoThemes</a>
-                  </li>
-                  <li class="entry__meta-date">
-                    Jan 21, 2018
-                  </li>
-                </ul>
-              </div>        
-              <div class="entry__excerpt">
-                <p>iPrice Group report offers insights on daily e-commerce activity in the ...</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="entry card post-list">
-            <div class="entry__img-holder post-list__img-holder card__img-holder" style="background-image: url(img/content/list/list_post_5.jpg)">
-              <a href="single-post.html" class="thumb-url"></a>
-              <img src="img/content/list/list_post_5.jpg" alt="" class="entry__img d-none">
-              <a href="categories.html" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--red">Investment</a>
-            </div>
-
-            <div class="entry__body post-list__body card__body">
-              <div class="entry__header">
-                <h2 class="entry__title">
-                  <a href="single-post.html">Decentralized Exchanges (DEX) – What Are They?</a>
-                </h2>
-                <ul class="entry__meta">
-                  <li class="entry__meta-author">
-                    <span>by</span>
-                    <a href="#">DeoThemes</a>
-                  </li>
-                  <li class="entry__meta-date">
-                    Jan 21, 2018
-                  </li>
-                </ul>
-              </div>        
-              <div class="entry__excerpt">
-                <p>iPrice Group report offers insights on daily e-commerce activity in the ...</p>
-              </div>
-            </div>
-          </article>
-
-          <article class="entry card post-list">
-            <div class="entry__img-holder post-list__img-holder card__img-holder" style="background-image: url(img/content/list/list_post_6.jpg)">
-              <a href="single-post.html" class="thumb-url"></a>
-              <img src="img/content/list/list_post_6.jpg" alt="" class="entry__img d-none">
-              <a href="categories.html" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--cyan">Technology</a>
-            </div>
-
-            <div class="entry__body post-list__body card__body">
-              <div class="entry__header">
-                <h2 class="entry__title">
-                  <a href="single-post.html">Decentralized Exchanges (DEX) – What Are They?</a>
-                </h2>
-                <ul class="entry__meta">
-                  <li class="entry__meta-author">
-                    <span>by</span>
-                    <a href="#">DeoThemes</a>
-                  </li>
-                  <li class="entry__meta-date">
-                    Jan 21, 2018
-                  </li>
-                </ul>
-              </div>        
-              <div class="entry__excerpt">
-                <p>iPrice Group report offers insights on daily e-commerce activity in the ...</p>
-              </div>
-            </div>
-          </article>
+          @endforeach
+          
         </section> <!-- end worldwide news -->
 
         <!-- Pagination -->

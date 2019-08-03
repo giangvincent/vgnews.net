@@ -89,8 +89,8 @@ class layoutController extends Controller
         return Admin::grid(Layout::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-            $grid->column('Title');
-            $grid->column('Content')->display(function ($content) {
+            $grid->column('title', 'Title');
+            $grid->column('content' , 'Content')->display(function ($content) {
                 if ($content != null) {
                     return 'Filled';
                 }
@@ -116,10 +116,11 @@ class layoutController extends Controller
             ];
             $form->switch('status' , 'Post Status')->states($states);
             $form->text('title' , __('Title'));
+            $form->text('slug' , __('Slug'));
             $form->textarea('description' , __('Description'));
             $form->ckeditor('content' , __('Content'));
             $form->select('type' , 'Layput type')->options([1 => 'Type 1', 2 => 'Type 2']);
-            $form->select('pos' , 'Position')->options(['home' => 'Home page' , 'list' => 'List page' , 'detail' => "Detail page"]);
+            $form->select('pos' , 'Position')->options(['home' => 'Home page' , 'list' => 'List page' , 'detail' => "Detail page" , 'footer' => 'Footer']);
             $form->select('page' , 'Page')->options(['home' => 'Home page' , 'list' => 'List page' , 'detail' => "Detail page"]);
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');

@@ -22,8 +22,9 @@ class frontController extends Controller
         $this->postRepo = new PostRepo();
         $this->dataRepo = new DataRepo();
         $this->layoutRepo = new LayoutRepo();
-        
-        $this->layoutRepo->loadNavigator();
+        $this->layoutRepo->loadPrimaryLayouts();
+        $this->dataRepo->loadCates();
+        $this->dataRepo->loadLayouts();
     }
     /**
      * [homePage load homepage]
@@ -41,11 +42,8 @@ class frontController extends Controller
         $newsflash = $this->dataRepo->loadTypedNews(7, 'newsflash');
         $editor_pick = $this->dataRepo->loadTypedNews(7, 'editor_pick');
         $recommended = $this->dataRepo->loadTypedNews(2, 'recommended');
-        view()->share('feature', $feature);
         view()->share('newsflash', $newsflash);
-        view()->share('editor_pick', $editor_pick);
-        view()->share('recommended', $recommended);
-        return view('Frontend.Home');
+        return view('Frontend.Home' , compact('feature', 'editor_pick' , 'recommended'));
     }
     /**
      * [ajaxPaginate load nes by paginate for ajax request]
@@ -54,7 +52,9 @@ class frontController extends Controller
      * @return [object] []
      */
     public function ajaxPaginate($page, $load_type = 'homepage')
-    { }
+    {
+        return $this->ajaxPostWithPagination($page);
+    }
 
     /**
      * [catePage load category page]
