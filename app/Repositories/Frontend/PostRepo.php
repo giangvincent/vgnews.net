@@ -151,7 +151,8 @@ class PostRepo extends Controller
 			$q->where('locale', \App::getLocale())->orderBy('id', 'desc')->orderBy('updated_at', 'desc');
 		});
 		view()->share('loaded_ids', $postsWithPagination->pluck('id'));
-		$postsWithPagination->paginate(7);
+		$postsWithPagination = $postsWithPagination->paginate(7);
+		dump($postsWithPagination);
 		return view('Frontend.Partials.Content.V1.Home.PaginatePosts', compact('postsWithPagination'));
 	}
 }

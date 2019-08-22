@@ -5,7 +5,8 @@
             <h3 class="section-title">Worldwide</h3>
             <a href="#" class="all-posts-url">View All</a>
           </div>
-          <?php dump($postsWithPagination); ?>
+          <?php dump($postsWithPagination);
+           ?>
           @foreach ($postsWithPagination as $post)
           <article class="entry card post-list">
             <div class="entry__img-holder post-list__img-holder card__img-holder" style="background-image: url(img/content/list/list_post_1.jpg)">
