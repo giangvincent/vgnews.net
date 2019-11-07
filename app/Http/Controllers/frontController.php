@@ -51,9 +51,11 @@ class frontController extends Controller
      * @param [string] $[load_type] [Type of the news need to load (homepage , list , detail)]
      * @return [object] []
      */
-    public function ajaxPaginate($page, $load_type = 'homepage')
+    public function ajaxPaginate()
     {
-        return $this->ajaxPostWithPagination($page);
+        $page = $_GET['page'];
+        // dump($page);
+        return $this->postRepo->ajaxPostWithPagination($page);
     }
 
     /**

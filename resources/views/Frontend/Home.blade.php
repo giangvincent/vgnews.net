@@ -47,9 +47,9 @@
     <!-- Content Secondary -->
     <div class="row">
       <!-- Posts -->
-      <div class="col-lg-8 blog__content mb-72">
+      <div class="col-lg-8 blog__content mb-72" id="paginate-posts">
 
-        @include('Frontend.Partials.Content.V1.Home.PaginatePosts')
+        {{-- @include('Frontend.Partials.Content.V1.Home.PaginatePosts') --}}
 
       </div> <!-- end posts -->
 

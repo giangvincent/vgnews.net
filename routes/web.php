@@ -11,6 +11,8 @@ Route::get('auto-crawl-domain/{domain}' , 'AutoCrawlController@initDomain')->nam
 Route::get('get-url' , function() {
     echo $_GET['url'];
 });
+// ajax routes
+Route::get('get-paginate-posts', 'frontController@ajaxPaginate')->name('front.ajaxPaginate');
 
 # Route common of the website
 //\Debugbar::disable();
@@ -21,6 +23,8 @@ Route::get('p/{slug}_{id}.html' , 'frontController@singlePost')->name('front.det
 Route::get('s/{query}', 'frontController@pageSearch')->name('front.searching');
 
 Route::get('page/{page}' , 'frontController@singlePage' )->name('front.specPage');
+
+
 
 Route::get('/test-auto' , function (){
     $crawl = new \App\Http\Controllers\toolAutoController();
