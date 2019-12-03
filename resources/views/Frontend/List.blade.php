@@ -42,7 +42,13 @@
                       <img data-src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }}" src="img/empty.png" class="entry__img lazyload" alt="{{ $news->slug }}" />
                     </div>
                   </a>
-                  <a href="#" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--violet">world</a>
+                  @foreach ($news->categories()->get() as $cat)
+                  @if ($cat->slug !== $cateDb->slug)
+                  <a href="{{ $cat->slug }}" class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--violet">{{ $cat->title }}</a>
+                  @endif
+                  
+                  @endforeach
+                  
                 </div>
 
                 <div class="entry__body card__body">

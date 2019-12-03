@@ -25,5 +25,6 @@
     </div>
   </main> <!-- end main-wrapper -->
   @include('Frontend.Vendor.ImportFile.Script')
+  @yield('script')
 </body>
 </html>

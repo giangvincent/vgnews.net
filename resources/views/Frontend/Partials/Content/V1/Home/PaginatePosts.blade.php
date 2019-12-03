@@ -2,7 +2,7 @@
 <!-- Worldwide News -->
 <section class="section">
   <div class="title-wrap title-wrap--line">
-    <h3 class="section-title">Worldwide</h3>
+    <h3 class="section-title" id="listAll">Worldwide</h3>
     <a href="#" class="all-posts-url">View All</a>
   </div>
 

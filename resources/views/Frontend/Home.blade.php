@@ -61,5 +61,19 @@
   @endsection
 
   @section('script')
+  <script>
+  $(document).ready(function () {
+  $(document).on('click', '.pagination a', function (event) {
+    event.preventDefault();
+    $('li').removeClass('active');
+    $(this).parent('li').addClass('active');
+    var myurl = $(this).attr('href');
+    var page = $(this).attr('href').split('page=')[1];
+    goToByScroll('listAll');
+    getData(page);
+  });
+});
 
+
+  </script>
   @endsection

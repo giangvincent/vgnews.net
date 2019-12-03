@@ -510,16 +510,14 @@ $(window).on('hashchange', function () {
   }
 });
 
-$(document).ready(function () {
-  $(document).on('click', '.pagination a', function (event) {
-    event.preventDefault();
-    $('li').removeClass('active');
-    $(this).parent('li').addClass('active');
-    var myurl = $(this).attr('href');
-    var page = $(this).attr('href').split('page=')[1];
-    getData(page);
-  });
-});
+function goToByScroll(id) {
+  // Remove "link" from the ID
+  id = id.replace("link", "");
+  // Scroll
+  $('html,body').animate({
+      scrollTop: $("#" + id).offset().top
+  }, 'slow');
+}
 
 function getData(page) {
   $.ajax({
