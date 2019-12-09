@@ -96,8 +96,20 @@ class frontController extends Controller
         $this->postRepo->loadPopular();
         $postDb = Post::where('id', $id)->whereTranslation('slug', $slug)->first();
         $cateDb = $postDb->categories();
+        $relatedPosts = [];
+        foreach($cateDb->get() as $cat) {
+            array_push($relatedPosts, $cat->posts()->limit(6)->get()->toArray());
+        }
+        shuffle($relatedPosts[0]);
+        // dd($relatedPosts);
+        $relatedPosts = array_slice($relatedPosts[0], 0, 6);
+        $previousPost = Post::where('id', '<', $id)->orderBy('id', 'desc')->first();
+        // get next user id
+        $nextPost = Post::where('id', '>', $id)->orderBy('id', 'asc')->first();
+        
+        // dump($cateDb->first()->posts()->get());
         #$commentList , $relatedPosts , $postsNavigation
-        return view('Frontend.Single', compact('postDb', 'cateDb'));
+        return view('Frontend.Single', compact('postDb', 'cateDb', 'relatedPosts', 'previousPost', 'nextPost'));
     }
     /**
      * [singlePage load a specific page]

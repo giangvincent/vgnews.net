@@ -16,7 +16,7 @@ const crawledDataFolder = '../public/upload/crawledData/'
 // const { JSDOM } = jsdom
 const cheerio = require('cheerio')
 
-const db = require('./dbConfig')
+// const db = require('./dbConfig')
 const readFolder = require('./folderRead.js')
 
 function init (urlCrawl, dataFile, filename) {
