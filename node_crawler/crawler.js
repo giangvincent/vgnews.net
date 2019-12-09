@@ -61,8 +61,7 @@ function init (urlCrawl, dataFile, filename) {
             d.title = cleanText(d.title)
             if (
               typeof d.content !== 'undefined' &&
-              d.content !== null &&
-              db('post_translations').where('title', d.title)
+              d.content !== null
             ) {
               // d.title = cleanText(d.title)
               d.description = cleanText(d.description)
@@ -76,7 +75,7 @@ function init (urlCrawl, dataFile, filename) {
             d.image = imageName.replace('../public/upload/' , '') */
               makeContent(d.content, {}, content => {
                 // d.content = content
-                // console.log(content)
+                console.log(content)
                 if (content.success) {
                   d.content = content.data.join('')
                   ret.push(d)
@@ -132,18 +131,18 @@ function makeContent (content, data = {}, callback) {
         // console.log(mimeTypes.detectExtension(imageSrc))
         if (images.indexOf(imageSrc) < 0 && isURL(imageSrc)) {
           images.push(imageSrc)
-          var imageName =
-            '../public/upload/images/' +
-            randStr(20) +
-            '.' +
-            (getExtension(imageSrc) !== '' &&
-              getExtension(imageSrc) !== null
-              ? getExtension(imageSrc)
-              : 'jpg')
-          saveImageToDisk(imageSrc, imageName)
-          imageName = imageName.replace('../public/upload/', '')
+          // var imageName =
+          //   '../public/upload/images/' +
+          //   randStr(20) +
+          //   '.' +
+          //   (getExtension(imageSrc) !== '' &&
+          //     getExtension(imageSrc) !== null
+          //     ? getExtension(imageSrc)
+          //     : 'jpg')
+          // saveImageToDisk(imageSrc, imageName)
+          // imageName = imageName.replace('../public/upload/', '')
           var imgContent =
-            '<div><p><img src="' + imageName + '"></p></div>'
+            '<div><p><img src="' + imageSrc + '"></p></div>'
           retContent.push(imgContent)
         }
       } else {
@@ -159,7 +158,7 @@ function makeContent (content, data = {}, callback) {
     }
     // console.log(index, $(ele).text())
   })
-  return callback ({
+  return callback({
     success: true,
     data: retContent
   })

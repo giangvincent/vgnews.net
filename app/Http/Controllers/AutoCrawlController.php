@@ -30,8 +30,7 @@ class AutoCrawlController extends Controller
      */
     protected $domain = '';
 
-    protected $imageTypeArray = array
-    (
+    protected $imageTypeArray = array(
         0=>'UNKNOWN',
         1=>'GIF',
         2=>'JPEG',
@@ -50,13 +49,13 @@ class AutoCrawlController extends Controller
         15=>'WBMP',
         16=>'XBM',
         17=>'ICO',
-        18=>'COUNT' 
+        18=>'COUNT'
     );
 
-    static public $dataCrawled = array();
-    static public $folderData = '/upload/crawledData/';
+    public static $dataCrawled = array();
+    public static $folderData = '/upload/crawledData/';
 
-    function __construct()
+    public function __construct()
     {
         # code...
     }
@@ -69,12 +68,15 @@ class AutoCrawlController extends Controller
     public function initUrl($url_id)
     {
         $this->url = UrlCraw::where('id', $url_id)->where('status', 'active')->firstOrFail();
-        self::$folderData = public_path() . self::$folderData . $this->url->id; #set crawled data stored folder
+
+        #set crawled data stored folder
+        self::$folderData = public_path() . self::$folderData . $this->url->id;
+        
         $allFileData = $this->dirToArray(self::$folderData);
 
         foreach ($allFileData as $file) {
             $timeCrawl = explode('.', $file);
-            // dump(date('d M ,Y', $timeCrawl[0]));
+            dump(date('d M ,Y', $timeCrawl[0]));
             $data = json_decode(file_get_contents(self::$folderData . '/' . $file), true);
             array_push(self::$dataCrawled, $data);
             unlink(self::$folderData . '/' . $file);
@@ -109,23 +111,16 @@ class AutoCrawlController extends Controller
         foreach ($allData as $data) {
             foreach ($data as $d) {
                 $d['title'] = trim(trim($d['title']));
-                //dump($d['title']);
+                dump($d['title']);
                 $d['slug'] = $this->khongdau($d['title']);
-                if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) && checkRemoteFile($d['image'])) {
+                if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) && $this->checkRemoteFile($d['image'])) {
                     $post = new Post();
                     $post->title = $d['title'];
                     $post->slug = $d['slug'];
                     $post->description = isset($d['description']) ? $d['description'] : '';
-                    $post->content = $d['content'];
-                    
-                    list($width, $height , $image_type) = getimagesize($d['image']);
-                    if ($width < 1 || $height < 1) {
-                        echo 'image illegal!. <br>';
-                        continue;
-                    }
-                    $external_image = file_get_contents($d['image']);
-                    $imageName = 'images/'.$this->generateRandomString().$image_type;
-                    Storage::disk('public')->put( $imageName , $external_image, 'public');
+                    $post->content = $this->extractContentImage($d['content']);
+                    // dd($this->extractContentImage($d['content']));
+                    $imageName = $this->saveExternalImageToDisk($d['image']);
 
                     $post->media = $imageName;
                     // TODO: Save image to folder first on php side
@@ -134,9 +129,8 @@ class AutoCrawlController extends Controller
                     $post->status = 'publish';
                     $post->save();
                     $post->categories()->attach($this->url->categories()->pluck('id'));
-                    //dump($post);
+                //dump($post);
                 } else {
-                    
                 }
             }
         }
@@ -151,23 +145,22 @@ class AutoCrawlController extends Controller
         $this->crawlTool = $this->crawlTool . '?url=' . urlencode($this->url->url) . '&json=' . urlencode(env('APP_URL') . '/upload/rules/' . $this->url->id . '.json');
         dump($this->crawlTool);
         /*$curl = curl_init();
-		curl_setopt_array($curl, array(
-		    CURLOPT_RETURNTRANSFER => 0,
-		    CURLOPT_URL => $this->crawlTool,
-		    CURLOPT_USERAGENT => 'crawler',
-		    CURLOPT_SSL_VERIFYPEER => false
-		));
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 0,
+            CURLOPT_URL => $this->crawlTool,
+            CURLOPT_USERAGENT => 'crawler',
+            CURLOPT_SSL_VERIFYPEER => false
+        ));
 
-	    $jsonData = curl_exec($curl);
-	    curl_close($curl);*/
+        $jsonData = curl_exec($curl);
+        curl_close($curl);*/
         $jsonData = json_decode(file_get_contents('http://localhost:9000/test.json'), true);
         dump($jsonData);
         foreach ($jsonData as $d) {
-
             $d['title'] = trim(trim($d['title']));
             //dump($d['title']);
             $d['slug'] = $this->khongdau($d['title']);
-            if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) ) {
+            if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content'])) {
                 $post = new Post();
                 $post->title = $d['title'];
                 $post->slug = $d['slug'];
@@ -184,18 +177,58 @@ class AutoCrawlController extends Controller
     }
 
     /**
+     * save external link image url to local disk
+     * @param $externalLink => Must be image url
+     * @return '' || [local image link]
+     */
+    public function saveExternalImageToDisk($externalLink)
+    {
+        list($width, $height, $image_type) = getimagesize($externalLink);
+        if ($width < 1 || $height < 1) {
+            echo 'image illegal!. <br>';
+            return '';
+        }
+        $external_image = file_get_contents($externalLink);
+        $imageName = 'images/'.$this->generateRandomString().$image_type;
+        Storage::disk('public')->put($imageName, $external_image, 'public');
+        return $imageName;
+    }
+
+    /**
+     * extract image in content HTML tags
+     * @param $content => Should contain img tag
+     * @return $content => new content with new Image has been replace with local image
+     */
+    public function extractContentImage($content)
+    {
+        $dom = new \domDocument;
+        $dom->loadHTML($content);
+        $dom->preserveWhiteSpace = false;
+        $images = $dom->getElementsByTagName('img');
+        $retContent = $content;
+        foreach ($images as $image) {
+            // echo $image->getAttribute('src');
+            $imageUrl = $image->getAttribute('src');
+            // dump($imageUrl);
+            $imageName = 'upload/' . $this->saveExternalImageToDisk($imageUrl);
+            // dump($imageName);
+            $retContent = str_replace($imageUrl, $imageName, $content);
+        }
+        return $retContent;
+    }
+
+    /**
      * [stringIsNullOrWhitespace check a string is null or contain only whitespace]
      * @param  [string|text] $text [input]
      * @return [boolean]       [description]
      */
-    function stringIsNullOrWhitespace($text)
+    public function stringIsNullOrWhitespace($text)
     {
         return ctype_space($text) || $text === "" || $text === null;
     }
 
-    function dirToArray($dir)
+    public function dirToArray($dir)
     {
-
         $result = array();
 
         $cdir = scandir($dir);
@@ -212,7 +245,7 @@ class AutoCrawlController extends Controller
         return $result;
     }
 
-    function checkRemoteFile($url)
+    public function checkRemoteFile($url)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -223,7 +256,7 @@ class AutoCrawlController extends Controller
 
         $result = curl_exec($ch);
         curl_close($ch);
-        if ($result !== FALSE) {
+        if ($result !== false) {
             return true;
         } else {
             return false;
