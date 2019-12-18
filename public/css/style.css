@@ -1919,6 +1919,12 @@ img.mfp-img {
 .socials--dark .social-twitter:focus {
     color: #55acee !important;
 }
+
+.socials--dark .social-reddit:hover,
+.socials--dark .social-reddit:focus {
+    color: #e67c65 !important;
+}
+
 .socials--dark .social-google-plus:hover,
 .socials--dark .social-google-plus:focus {
     color: #de4b39 !important;
@@ -2026,8 +2032,15 @@ img.mfp-img {
 .social-twitter {
     background-color: #55acee;
 }
+.social-reddit {
+    background-color: #e76e54;
+}
 .social-twitter:hover {
     background-color: #3ea1ec !important;
+    color: #fff !important;
+}
+.social-reddit:hover {
+    background-color: #e67c65 !important;
     color: #fff !important;
 }
 .social-google-plus {

@@ -91,17 +91,24 @@
                 <div class="entry__share">
                   <div class="sticky-col">
                     <div class="socials socials--rounded socials--large">
-                      <a class="social social-facebook" href="#" title="facebook" target="_blank" aria-label="facebook">
+                      <a class="social social-facebook" href="https://www.facebook.com/dialog/share?app_id=509852539469766&display=popup&href={{ urlencode(route('front.detailPage' , ['slug' => $postDb->slug, 'id' => $postDb->id])) }}&redirect_uri={{ urlencode(route('front.detailPage' , ['slug' => $postDb->slug, 'id' => $postDb->id])) }}" title="facebook" target="_blank" aria-label="facebook">
                         <i class="ui-facebook"></i>
                       </a>
-                      <a class="social social-twitter" href="#" title="twitter" target="_blank" aria-label="twitter">
+                      <a class="social social-twitter" href="http://twitter.com/share?text={{ urlencode($postDb->title) }}&url={{ urlencode(route('front.detailPage' , ['slug' => $postDb->slug, 'id' => $postDb->id])) }}&hashtags=vgnews.net" title="twitter" target="_blank" aria-label="twitter">
                         <i class="ui-twitter"></i>
                       </a>
-                      <a class="social social-google-plus" href="#" title="google" target="_blank" aria-label="google">
-                        <i class="ui-google"></i>
+                      
+
+                      <a class="social social-reddit" href="http://www.reddit.com/submit?url={{ urlencode(route('front.detailPage' , ['slug' => $postDb->slug, 'id' => $postDb->id])) }}&title={{ urlencode($postDb->title) }}" title="reddit" target="_blank" aria-label="reddit">
+                        <i class="ui-reddit"></i>
                       </a>
-                      <a class="social social-pinterest" href="#" title="pinterest" target="_blank" aria-label="pinterest">
+                      
+                      <a class="social social-pinterest" href="http://pinterest.com/pin/create/button/?url={{ urlencode(route('front.detailPage' , ['slug' => $postDb->slug, 'id' => $postDb->id])) }}&media={{ urlencode($postDb->media) }}&description={{ urlencode($postDb->description) }}" title="pinterest" target="_blank" aria-label="pinterest">
                         <i class="ui-pinterest"></i>
+                      </a>
+
+                      <a class="social" style="background-color: #aaa !important;">
+                        <div class="zalo-share-button" data-href="route('front.detailPage' , ['slug' => $postDb->slug, 'id' => $postDb->id])" data-oaid="579745863508352884" data-layout="4" data-color="white" data-customize=false style="border-radius: 50%; background-color: #aaa !important; margin-top: 3px;"></div>
                       </a>
                     </div>
                   </div>                  
@@ -146,5 +153,5 @@
 @endsection
 
 @section('script')
-
+<script src="https://sp.zalo.me/plugins/sdk.js"></script>
 @endsection
