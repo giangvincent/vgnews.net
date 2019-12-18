@@ -158,10 +158,12 @@ function makeContent (content, data = {}, callback) {
     }
     // console.log(index, $(ele).text())
   })
-  return callback({
+
+  const callbackData = {
     success: true,
     data: retContent
-  })
+  }
+  return callback(callbackData)
 }
 
 /**

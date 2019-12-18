@@ -2,7 +2,21 @@
 
 @section('Header')
 <title>{{ $postDb->title }} | VGNEWS.NET</title>
-<meta>
+<meta name="Description" content="{{ $postDb->description }}">
+<meta name="Keywords" content="{{ implode(',', explode(' ', $postDb->description)) }}">
+<meta property="og:url"                content="" />
+<meta property="og:type"               content="article" />
+<meta property="og:title"              content="{{ $postDb->title }} | VGNEWS.NET" />
+<meta property="og:description"        content="{{ $postDb->description }}" />
+<meta property="og:image"              content="{{ $postDb->media }}" />
+<meta property="og:locale"             content="vi_VN" />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="{{ $postDb->media }}"/>
+<meta property="twitter:url" content=""/>
+<meta property="twitter:title" content="{{ $postDb->title }} | VGNEWS.NET"/>
+<meta property="twitter:description" content="{{ $postDb->description }}"/>
+<meta property="twitter:image" content="{{ $postDb->media }}" />
 @endsection
 
 @section('Main_content')
@@ -100,6 +114,7 @@
                   {!! $postDb->content !!}
 
                 </div> <!-- end entry article -->
+                <div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-width="" data-layout="button" data-action="like" data-size="large" data-share="true"></div>
               </div> <!-- end entry article wrap -->
               
               <!-- TODO : after the content of single post -->
@@ -109,8 +124,9 @@
               @include('Frontend.Partials.Content.V1.Single.RelatedPost')
             </article> <!-- end standard post -->
             <!-- TODO : Comment box -->
-            @include('Frontend.Partials.Content.V1.Single.CommentList')
-            @include('Frontend.Partials.Content.V1.Single.CommentForm')
+            @include('Frontend.Partials.Content.V1.Single.facebook_comment')
+            {{-- @include('Frontend.Partials.Content.V1.Single.CommentList')
+            @include('Frontend.Partials.Content.V1.Single.CommentForm') --}}
 
           </div> <!-- end content box -->
         </div> <!-- end post content -->

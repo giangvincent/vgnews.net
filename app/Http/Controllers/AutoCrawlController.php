@@ -188,7 +188,7 @@ class AutoCrawlController extends Controller
             echo 'image illegal!. <br>';
             return '';
         }
-        $external_image = file_get_contents($externalLink);
+        $external_image = file_get_contents(preg_replace('/_([0-9]+)x([0-9]+)/g', '' , $externalLink));
         $imageName = 'images/'.$this->generateRandomString().$image_type;
         Storage::disk('public')->put($imageName, $external_image, 'public');
         return $imageName;

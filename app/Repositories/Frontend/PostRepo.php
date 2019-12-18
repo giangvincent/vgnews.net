@@ -152,7 +152,7 @@ class PostRepo extends Controller
 		});
 		view()->share('loaded_ids', $postsWithPagination->pluck('id'));
 		$postsWithPagination = $postsWithPagination->paginate(7);
-		dump($postsWithPagination);
+		// dump($postsWithPagination);
 		return view('Frontend.Partials.Content.V1.Home.PaginatePosts', compact('postsWithPagination'));
 	}
 }
