@@ -134,7 +134,7 @@ class navController extends Controller
             ];
             $form->switch('is_root' , 'Root Menu')->states($root_states);
             
-            $form->select('type' , 'Navigation type')->options(['normal' => 'normal', 'mega' => 'mega']);
+            $form->select('type' , 'Navigation type')->options(['normal' => 'normal', 'mega' => 'mega', 'topbar' => 'topbar']);
             $form->number('pos' , 'Position Navigation');
             $form->number('parent' , 'Parent');
             $form->text('page_title' , 'Page title');
@@ -144,6 +144,7 @@ class navController extends Controller
             $form->saved(function (Form $form) { 
                 $navs = new SaveFileNavs();
                 $navs->loadRoot();
+                $navs->saveTopNav();
             });
             
         });

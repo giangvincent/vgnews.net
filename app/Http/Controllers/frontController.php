@@ -125,6 +125,10 @@ class frontController extends Controller
         if ($page == 'about') {
             return view('Frontend.Pages.About');
         }
+
+        if ($page == 'ads') {
+            return view('Frontend.Pages.Adsvertise');
+        }
     }
 
     /**

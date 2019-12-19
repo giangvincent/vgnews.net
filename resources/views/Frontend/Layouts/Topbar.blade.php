@@ -7,30 +7,23 @@
           <!-- Top menu -->
           <div class="col-lg-6">
             <ul class="top-menu">
-              <li><a href="#">About</a></li>
-              <li><a href="#">Advertise</a></li>
-              <li><a href="#">Contact</a></li>
+              @foreach ($topbar as $nav)
+              <li><a href="{{$nav->url}}">{{ $nav->name_display }}</a></li>
+              @endforeach
+              
             </ul>
           </div>
           
           <!-- Socials -->
           <div class="col-lg-6">
             <div class="socials nav__socials socials--nobase socials--white justify-content-end"> 
-              <a class="social social-facebook" href="#" target="_blank" aria-label="facebook">
-                <i class="ui-facebook"></i>
+              @foreach ($socials as $s)
+              <a class="social social-{{$socials->slug}}" href="{{$socials->description}}" target="_blank" aria-label="{{$socials->slug}}">
+                <i class="ui-{{$socials->slug}}"></i>
               </a>
-              <a class="social social-twitter" href="#" target="_blank" aria-label="twitter">
-                <i class="ui-twitter"></i>
-              </a>
-              <a class="social social-google-plus" href="#" target="_blank" aria-label="google">
-                <i class="ui-google"></i>
-              </a>
-              <a class="social social-youtube" href="#" target="_blank" aria-label="youtube">
-                <i class="ui-youtube"></i>
-              </a>
-              <a class="social social-instagram" href="#" target="_blank" aria-label="instagram">
-                <i class="ui-instagram"></i>
-              </a>
+              @endforeach
+              
+              
             </div>
           </div>
 

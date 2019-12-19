@@ -42,4 +42,20 @@ class SaveFileNavs extends Controller
         dump($navrecurNavArrs);
         return $navrecurNavArrs;
     }
+
+    public function saveTopNav()
+    {
+        $navs = Navigation::translated(\App::getLocale())->where('status', 'publish')->where('type', 'topbar')->orderBy('pos', 'asc')->get()->toArray();
+        $this->navArr = $navs;
+        
+
+        $folderNavigation = "contents\\".\App::getLocale();
+        if (!file_exists($folderNavigation)) {
+            mkdir($folderNavigation, 0777, true);
+        }
+        $navFile = fopen(public_path($folderNavigation."\\topbar.json"), "w") or die("Unable to open file!");
+        $jsonFile = json_encode($this->navArr);
+        fwrite($navFile, $jsonFile);
+        fclose($navFile);
+    }
 }

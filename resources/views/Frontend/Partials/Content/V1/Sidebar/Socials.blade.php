@@ -5,10 +5,13 @@
   <div class="socials socials--wide socials--large">
     <div class="row row-16">
       <div class="col">
-        <a class="social social-facebook" href="#" title="facebook" target="_blank" aria-label="facebook">
-          <i class="ui-facebook"></i>
-          <span class="social__text">Facebook</span>
+        @foreach ($socials as $s)
+        <a class="social social-{{$s->slug}}" href="{{$s->description}}" title="{{$s->slug}}" target="_blank" aria-label="{{$s->slug}}">
+          <i class="ui-{{$s->slug}}"></i>
+          <span class="social__text">{{$s->title}}</span>
         </a>
+        @endforeach
+        
         <a class="social social-twitter" href="#" title="twitter" target="_blank" aria-label="twitter">
           <i class="ui-twitter"></i>
           <span class="social__text">Twitter</span>

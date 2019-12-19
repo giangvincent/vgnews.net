@@ -114,13 +114,13 @@ class layoutController extends Controller
                 'on'  => ['value' => 'publish', 'text' => 'Publish', 'color' => 'success'],
                 'off' => ['value' => 'pending', 'text' => 'Pending', 'color' => 'warning'],
             ];
-            $form->switch('status' , 'Post Status')->states($states);
+            $form->switch('status' , 'Layout Status')->states($states);
             $form->text('title' , __('Title'));
             $form->text('slug' , __('Slug'));
             $form->textarea('description' , __('Description'));
             $form->ckeditor('content' , __('Content'));
             $form->select('type' , 'Layput type')->options([1 => 'Type 1', 2 => 'Type 2']);
-            $form->select('pos' , 'Position')->options(['home' => 'Home page' , 'list' => 'List page' , 'detail' => "Detail page" , 'footer' => 'Footer']);
+            $form->select('pos' , 'Position')->options(['home' => 'Home page' , 'list' => 'List page' , 'detail' => "Detail page" , 'footer' => 'Footer', 'social_fanpage' => 'Social Fanpage']);
             $form->select('page' , 'Page')->options(['home' => 'Home page' , 'list' => 'List page' , 'detail' => "Detail page"]);
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
