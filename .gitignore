@@ -1,8 +1,6 @@
 /node_modules
 /public/hot
 /public/storage
-/public/upload/images
-/public/upload/crawledData
 /storage/*.key
 /vendor
 /.idea
@@ -16,3 +14,7 @@ yarn-error.log
 .phpunit.result.cache
 /node_crawler/node_modules
 /template
+
+/public/upload/crawledData
+/public/upload/images
+/public/upload/thumb_images

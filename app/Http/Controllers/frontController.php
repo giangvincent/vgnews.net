@@ -144,4 +144,5 @@ class frontController extends Controller
         $posts = Post::whereTranslationLike('title', '%' . $query . '%')->orWhereTranslationLike('slug', '%' . $query . '%')->paginate(8);
         return view('Frontend.Partials.Content.V1.searchPage', compact('posts', 'query'));
     }
+
 }

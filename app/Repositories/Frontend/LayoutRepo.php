@@ -19,8 +19,8 @@ class LayoutRepo extends Controller
     public function loadPrimaryLayouts()
     {
         $this->loadNavigator();
-				$this->loadFooterLayout();
-				$this->loadSingleSocial();
+        $this->loadFooterLayout();
+        $this->loadSingleSocial();
     }
     /**
      * [loadNavigator load published navigator has been saved in database]
@@ -30,9 +30,9 @@ class LayoutRepo extends Controller
     {
         $navs = json_decode(file_get_contents('contents/'.\App::getLocale().'/navigation.json'), true);
         //dump($navs);
-				view()->share('navs', $navs);
-				$topbar = json_decode(file_get_contents('contents/'.\App::getLocale().'/topbar.json'), true);
-        //dump($navs);
+        view()->share('navs', $navs);
+        $topbar = json_decode(file_get_contents('contents/'.\App::getLocale().'/topbar.json'), true);
+        // dump($topbar);
         view()->share('topbar', $topbar);
     }
     

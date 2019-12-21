@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Http\Request;
 use App\Model\Craw\HtmlDomRule;
 use App\Model\Craw\HistoryParse;
@@ -76,7 +76,7 @@ class AutoCrawlController extends Controller
 
         foreach ($allFileData as $file) {
             $timeCrawl = explode('.', $file);
-            dump(date('d M ,Y', $timeCrawl[0]));
+            // dump(date('d M ,Y', $timeCrawl[0]));
             $data = json_decode(file_get_contents(self::$folderData . '/' . $file), true);
             array_push(self::$dataCrawled, $data);
             unlink(self::$folderData . '/' . $file);
@@ -111,7 +111,7 @@ class AutoCrawlController extends Controller
         foreach ($allData as $data) {
             foreach ($data as $d) {
                 $d['title'] = trim(trim($d['title']));
-                dump($d['title']);
+                // dump($d['title']);
                 $d['slug'] = $this->khongdau($d['title']);
                 if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) && $this->checkRemoteFile($d['image'])) {
                     $post = new Post();
@@ -120,7 +120,7 @@ class AutoCrawlController extends Controller
                     $post->description = isset($d['description']) ? $d['description'] : '';
                     $post->content = $this->extractContentImage($d['content']);
                     // dd($this->extractContentImage($d['content']));
-                    $imageName = $this->saveExternalImageToDisk($d['image']);
+                    $imageName = $this->saveExternalImageToDisk($d['image'] , true);
 
                     $post->media = $imageName;
                     // TODO: Save image to folder first on php side
@@ -143,7 +143,7 @@ class AutoCrawlController extends Controller
     public function initCrawler()
     {
         $this->crawlTool = $this->crawlTool . '?url=' . urlencode($this->url->url) . '&json=' . urlencode(env('APP_URL') . '/upload/rules/' . $this->url->id . '.json');
-        dump($this->crawlTool);
+        // dump($this->crawlTool);
         /*$curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_RETURNTRANSFER => 0,
@@ -155,7 +155,7 @@ class AutoCrawlController extends Controller
         $jsonData = curl_exec($curl);
         curl_close($curl);*/
         $jsonData = json_decode(file_get_contents('http://localhost:9000/test.json'), true);
-        dump($jsonData);
+        // dump($jsonData);
         foreach ($jsonData as $d) {
             $d['title'] = trim(trim($d['title']));
             //dump($d['title']);
@@ -171,7 +171,7 @@ class AutoCrawlController extends Controller
                 $post->source_link = $d['link'];
                 $post->save();
                 $post->categories()->attach($this->url->categories()->pluck('id'));
-                dump($post);
+                // dump($post);
             }
         }
     }
@@ -181,16 +181,29 @@ class AutoCrawlController extends Controller
      * @param $externalLink => Must be image url
      * @return '' || [local image link]
      */
-    public function saveExternalImageToDisk($externalLink)
+    public function saveExternalImageToDisk($externalLink, $resize = false)
     {
         list($width, $height, $image_type) = getimagesize($externalLink);
         if ($width < 1 || $height < 1) {
             echo 'image illegal!. <br>';
             return '';
         }
-        $external_image = file_get_contents(preg_replace('/_([0-9]+)x([0-9]+)/g', '' , $externalLink));
-        $imageName = 'images/'.$this->generateRandomString().$image_type;
-        Storage::disk('public')->put($imageName, $external_image, 'public');
+        $valid_types = array('.gif', '.jpeg', '.png', '.bmp');
+        $externalLink = preg_replace('/_([0-9]+)x([0-9]+)/', '' , $externalLink);
+        $external_image = file_get_contents($externalLink);
+        $imageName = $this->generateRandomString();
+        Storage::disk('public')->put('images/'.$imageName.$valid_types[$image_type], $external_image, 'public');
+
+        if ($resize) {
+            dump($externalLink);
+            $img = Image::make($external_image);
+            $img->resize(400, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $img->save(public_path('upload').'/thumb_images/'.$imageName.'_thumb.jpg');
+            // Storage::disk('public')->put('thumb_images/'.$imageName.'_thumb'.$valid_types[$image_type], $img, 'public');
+        }
         return $imageName;
     }
 
@@ -201,8 +214,9 @@ class AutoCrawlController extends Controller
      */
     public function extractContentImage($content)
     {
+        libxml_use_internal_errors(true);
         $dom = new \domDocument;
-        $dom->loadHTML($content);
+        @$dom->loadHTML($content);
         $dom->preserveWhiteSpace = false;
         $images = $dom->getElementsByTagName('img');
         $retContent = $content;
