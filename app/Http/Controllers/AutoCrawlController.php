@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Http\Controllers;
+set_time_limit(0);
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Http\Request;
 use App\Model\Craw\HtmlDomRule;
@@ -79,7 +79,7 @@ class AutoCrawlController extends Controller
             // dump(date('d M ,Y', $timeCrawl[0]));
             $data = json_decode(file_get_contents(self::$folderData . '/' . $file), true);
             array_push(self::$dataCrawled, $data);
-            unlink(self::$folderData . '/' . $file);
+            // unlink(self::$folderData . '/' . $file);
         }
         $this->insertDataCrawled();
         //dd(self::$dataCrawled);
@@ -113,7 +113,7 @@ class AutoCrawlController extends Controller
                 $d['title'] = trim(trim($d['title']));
                 // dump($d['title']);
                 $d['slug'] = $this->khongdau($d['title']);
-                if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) && $this->checkRemoteFile($d['image'])) {
+                if (Post::whereTranslation('slug', $d['slug'])->count() <= 0 && $d['title'] != '' && $d['title'] != null && isset($d['description']) && isset($d['content']) && isset($d['image']) && $this->checkRemoteFile($d['image'])) {
                     $post = new Post();
                     $post->title = $d['title'];
                     $post->slug = $d['slug'];
@@ -183,28 +183,56 @@ class AutoCrawlController extends Controller
      */
     public function saveExternalImageToDisk($externalLink, $resize = false)
     {
-        list($width, $height, $image_type) = getimagesize($externalLink);
-        if ($width < 1 || $height < 1) {
+        $imgSize = getimagesize($externalLink);
+        if ($imgSize[0] < 1 || $imgSize[1] < 1) {
             echo 'image illegal!. <br>';
             return '';
         }
-        $valid_types = array('.gif', '.jpeg', '.png', '.bmp');
+        $valid_types = ["image/png" => ".png", "image/jpeg" => ".jpg", "image/gif" => ".gif"];
+
         $externalLink = preg_replace('/_([0-9]+)x([0-9]+)/', '' , $externalLink);
+
+        dump($externalLink);
         $external_image = file_get_contents($externalLink);
         $imageName = $this->generateRandomString();
-        Storage::disk('public')->put('images/'.$imageName.$valid_types[$image_type], $external_image, 'public');
-
+        
         if ($resize) {
-            dump($externalLink);
-            $img = Image::make($external_image);
-            $img->resize(400, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            $img->save(public_path('upload').'/thumb_images/'.$imageName.'_thumb.jpg');
-            // Storage::disk('public')->put('thumb_images/'.$imageName.'_thumb'.$valid_types[$image_type], $img, 'public');
+            // dump($externalLink);
+            self::makeThumbImg(
+                ["width" => 510, "height" => 357], 
+                ["external_image" => $externalLink, 
+                "pathToSave" => '/thumb_images/'.$imageName.'_thumb_normal'.$valid_types[$imgSize['mime']]]
+            );
+            self::makeThumbImg(
+                ["width" => 255, "height" => 178], 
+                ["external_image" => $externalLink, "pathToSave" => '/thumb_images/'.$imageName.'_thumb_min'.$valid_types[$imgSize['mime']]]
+            );
+            // dump($imageName);
         }
+        $imageName = 'images/'.$imageName.$valid_types[$imgSize['mime']];
+        Storage::disk('public')->put($imageName, $external_image, 'public');
         return $imageName;
+    }
+
+    /**
+     * create new thumb image for saveExternalImageToDisk function
+     */
+    public static function makeThumbImg($size, $images)
+    {
+        if(isset($size['width']) && isset($size['height'])) {
+            if (isset($images['external_image']) && isset($images['pathToSave'])) {
+                $img = Image::make($images['external_image']);
+                $img->resize($size['width'], isset($size['height']), function ($constraint) {
+                    // $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+                $img->save(public_path('upload').$images['pathToSave']);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -215,18 +243,19 @@ class AutoCrawlController extends Controller
     public function extractContentImage($content)
     {
         libxml_use_internal_errors(true);
-        $dom = new \domDocument;
+        $dom = new \domDocument();
         @$dom->loadHTML($content);
         $dom->preserveWhiteSpace = false;
         $images = $dom->getElementsByTagName('img');
         $retContent = $content;
         foreach ($images as $image) {
+            
             // echo $image->getAttribute('src');
             $imageUrl = $image->getAttribute('src');
             // dump($imageUrl);
             $imageName = 'upload/' . $this->saveExternalImageToDisk($imageUrl);
             // dump($imageName);
-            $retContent = str_replace($imageUrl, $imageName, $content);
+            $retContent = str_replace($imageUrl, $imageName, $retContent);
         }
         return $retContent;
     }

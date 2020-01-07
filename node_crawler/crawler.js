@@ -142,7 +142,7 @@ function makeContent (content, data = {}, callback) {
           // saveImageToDisk(imageSrc, imageName)
           // imageName = imageName.replace('../public/upload/', '')
           var imgContent =
-            '<div><p><img src="' + imageSrc + '"></p></div>'
+            '<div><p><img src="' + imageSrc + '" class="lazyload"></p></div>'
           retContent.push(imgContent)
         }
       } else {
