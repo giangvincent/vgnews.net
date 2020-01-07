@@ -12,7 +12,7 @@
       style="background-image: url({{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }})">
       <a href="{{ route('front.detailPage' , ['slug' => $news->slug, 'id' => $news->id]) }}" class="thumb-url"></a>
       <img src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }}"
-        alt="{{ $news->slug }}" class="entry__img d-none">
+        alt="{{ $news->slug }}" class="entry__img d-none lazyload">
       @foreach ($news->categories()->get() as $cat)
       <a href="{{$cat->slug}}"
         class="entry__meta-category entry__meta-category--label entry__meta-category--align-in-corner entry__meta-category--blue">{{$cat->title}}</a>

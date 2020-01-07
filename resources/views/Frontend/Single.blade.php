@@ -82,7 +82,7 @@
               </div> <!-- end entry header -->
 
               <div class="entry__img-holder">
-                <img src="{{ (filter_var($postDb->media, FILTER_VALIDATE_URL)) ? $postDb->media : 'upload/'.$postDb->media }}" alt="{{ $postDb->slug }}" class="entry__img">
+                <img src="{{ (filter_var($postDb->media, FILTER_VALIDATE_URL)) ? $postDb->media : 'upload/'.$postDb->media }}" alt="{{ $postDb->slug }}" class="entry__img lazyload">
               </div>
 
               <div class="entry__article-wrap">
@@ -121,7 +121,7 @@
                   {!! $postDb->content !!}
 
                 </div> <!-- end entry article -->
-                <div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-width="" data-layout="button" data-action="like" data-size="large" data-share="true"></div>
+                {{-- <div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-width="" data-layout="button" data-action="like" data-size="large" data-share="true"></div> --}}
               </div> <!-- end entry article wrap -->
               
               <!-- TODO : after the content of single post -->

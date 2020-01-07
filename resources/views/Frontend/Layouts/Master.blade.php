@@ -12,7 +12,7 @@
 </head>
 <body class="bg-light style-default style-rounded">
   <div id="fb-root"></div>
-  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v5.0&appId=509852539469766&autoLogAppEvents=1"></script>
+  {{-- <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v5.0&appId=509852539469766&autoLogAppEvents=1"></script> --}}
   @include('Frontend.Layouts.Preload')<!-- Bg Overlay -->
   <div class="content-overlay"></div><!-- Bg Overlay -->
   
