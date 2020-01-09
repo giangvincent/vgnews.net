@@ -9,7 +9,7 @@
     @foreach($editor_pick as $news)
     <article class="entry thumb thumb--size-1">
       <div class="entry__img-holder thumb__img-holder"
-        style="background-image: url('{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }}');">
+        style="background-image: url('{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.replaceThumb($news->media) }}');">
         <div class="bottom-gradient"></div>
         <div class="thumb-text-holder">
           <h2 class="thumb-entry-title">

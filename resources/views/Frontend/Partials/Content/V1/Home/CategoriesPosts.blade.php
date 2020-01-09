@@ -13,7 +13,7 @@
         <div class="col-lg-6">
           <article class="entry thumb thumb--size-2">
             <div class="entry__img-holder thumb__img-holder"
-              style="background-image: url('{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }}');">
+              style="background-image: url('{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : public_path('upload').$news->media }}');">
               <div class="bottom-gradient"></div>
               <div class="thumb-text-holder thumb-text-holder--1">
                 <h2 class="thumb-entry-title">

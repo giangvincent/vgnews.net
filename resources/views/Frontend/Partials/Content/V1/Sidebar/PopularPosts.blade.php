@@ -9,7 +9,7 @@
           <div class="thumb-container thumb-100">
             <a href="{{ route('front.detailPage' , ['slug' => $news->slug, 'id' => $news->id]) }}">
               <img
-                data-src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }}"
+                data-src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.replaceThumb($news->media) }}"
                 src="img/empty.png" alt="{{ $news->slug }}" class="post-list-small__img--rounded lazyload">
             </a>
           </div>

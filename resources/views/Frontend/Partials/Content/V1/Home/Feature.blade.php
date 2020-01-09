@@ -12,7 +12,7 @@
           <article class="entry card featured-posts-grid__entry">
             <div class="entry__img-holder card__img-holder">
               <a href="{{ route('front.detailPage' , ['slug' => $news->slug, 'id' => $news->id]) }}">
-                <img src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }}"
+                <img src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.replaceThumb($news->media) }}"
                   alt="{{ $news->slug }}" class="entry__img lazyload">
               </a>
               @foreach ($news->categories()->get() as $cat)
@@ -50,10 +50,10 @@
         <div class="featured-posts-grid__item featured-posts-grid__item--sm">
           <article class="entry card post-list featured-posts-grid__entry">
             <div class="entry__img-holder post-list__img-holder card__img-holder"
-              style="background-image: url({{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }})">
+              style="background-image: url({{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.replaceThumb($news->media) }})">
               <a href="{{ route('front.detailPage' , ['slug' => $news->slug, 'id' => $news->id]) }}"
                 class="thumb-url"></a>
-              <img src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }}"
+              <img src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.replaceThumb($news->media) }}"
                 alt="" class="entry__img d-none lazyload">
               @foreach ($news->categories()->get() as $cat)
               <a href="{{$cat->slug}}"
@@ -83,10 +83,10 @@
         <div class="featured-posts-grid__item featured-posts-grid__item--sm">
           <article class="entry card post-list featured-posts-grid__entry">
             <div class="entry__img-holder post-list__img-holder card__img-holder"
-              style="background-image: url({{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }})">
+              style="background-image: url({{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.replaceThumb($news->media) }})">
               <a href="{{ route('front.detailPage' , ['slug' => $news->slug, 'id' => $news->id]) }}"
                 class="thumb-url"></a>
-              <img src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }}"
+              <img src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.replaceThumb($news->media) }}"
                 alt="{{ $news->slug }}" class="entry__img d-none lazyload">
               @foreach ($news->categories()->get() as $cat)
               <a href="{{$cat->slug}}"

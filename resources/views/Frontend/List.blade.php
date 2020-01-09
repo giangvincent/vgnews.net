@@ -39,7 +39,7 @@
                 <div class="entry__img-holder card__img-holder">
                   <a href="{{ route('front.detailPage' , ['slug' => $news->slug, 'id' => $news->id]) }}">
                     <div class="thumb-container thumb-70">
-                      <img data-src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.$news->media }}" src="img/empty.png" class="entry__img lazyload" alt="{{ $news->slug }}" />
+                      <img data-src="{{ (filter_var($news->media, FILTER_VALIDATE_URL)) ? $news->media : 'upload/'.replaceThumb($news->media) }}" src="img/empty.png" class="entry__img lazyload" alt="{{ $news->slug }}" />
                     </div>
                   </a>
                   @foreach ($news->categories()->get() as $cat)
