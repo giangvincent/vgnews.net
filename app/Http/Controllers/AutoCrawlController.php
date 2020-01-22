@@ -79,7 +79,7 @@ class AutoCrawlController extends Controller
             // dump(date('d M ,Y', $timeCrawl[0]));
             $data = json_decode(file_get_contents(self::$folderData . '/' . $file), true);
             array_push(self::$dataCrawled, $data);
-            // unlink(self::$folderData . '/' . $file);
+            unlink(self::$folderData . '/' . $file);
         }
         $this->insertDataCrawled();
         //dd(self::$dataCrawled);
