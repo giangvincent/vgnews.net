@@ -191,6 +191,7 @@ class AutoCrawlController extends Controller
         $valid_types = ["image/png" => ".png", "image/jpeg" => ".jpg", "image/gif" => ".gif"];
 
         $externalLink = preg_replace('/_([0-9]+)x([0-9]+)/', '' , $externalLink);
+        $externalLink = preg_replace('/(https:\/\/i1)/', 'https://i' , $externalLink);
 
         dump($externalLink);
         $external_image = file_get_contents($externalLink);
