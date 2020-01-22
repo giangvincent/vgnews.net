@@ -5,6 +5,9 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+use App\Model\Craw\UrlCraw;
+use App\Http\Controllers\AutoCrawlController;
+
 class Kernel extends ConsoleKernel
 {
     /**
@@ -28,8 +31,11 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         
         $schedule->call(function () {
-            $crawl = new \App\Http\Controllers\toolAutoController();
-            $crawl->initCrawl();
+            $urls = UrlCraw::where('status', 'active')->get();
+            foreach ($urls as $url) {
+                $crawl = new AutoCrawlController();
+                $crawl->initUrl($url->id);
+            }
         })->hourly();
     }
 
