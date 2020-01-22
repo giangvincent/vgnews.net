@@ -26,6 +26,11 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        
+        $schedule->call(function () {
+            $crawl = new \App\Http\Controllers\toolAutoController();
+            $crawl->initCrawl();
+        })->hourly();
     }
 
     /**
