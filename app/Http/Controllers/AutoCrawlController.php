@@ -52,8 +52,8 @@ class AutoCrawlController extends Controller
         18=>'COUNT'
     );
 
-    public static $dataCrawled = array();
-    public static $folderData = '/upload/crawledData/';
+    public $dataCrawled = array();
+    public $folderData = '/upload/crawledData/';
 
     public function __construct()
     {
@@ -70,16 +70,16 @@ class AutoCrawlController extends Controller
         $this->url = UrlCraw::where('id', $url_id)->where('status', 'active')->firstOrFail();
 
         #set crawled data stored folder
-        self::$folderData = public_path() . self::$folderData . $this->url->id;
+        $this->folderData = public_path() . $this->folderData . $this->url->id;
         
-        $allFileData = $this->dirToArray(self::$folderData);
+        $allFileData = $this->dirToArray($this->folderData);
 
         foreach ($allFileData as $file) {
             $timeCrawl = explode('.', $file);
             // dump(date('d M ,Y', $timeCrawl[0]));
-            $data = json_decode(file_get_contents(self::$folderData . '/' . $file), true);
-            array_push(self::$dataCrawled, $data);
-            unlink(self::$folderData . '/' . $file);
+            $data = json_decode(file_get_contents($this->folderData . '/' . $file), true);
+            array_push($this->dataCrawled, $data);
+            unlink($this->folderData . '/' . $file);
         }
         $this->insertDataCrawled();
         //dd(self::$dataCrawled);
@@ -107,7 +107,7 @@ class AutoCrawlController extends Controller
      */
     public function insertDataCrawled()
     {
-        $allData = self::$dataCrawled;
+        $allData = $this->dataCrawled;
         foreach ($allData as $data) {
             foreach ($data as $d) {
                 $d['title'] = trim(trim($d['title']));
@@ -193,8 +193,8 @@ class AutoCrawlController extends Controller
         $externalLink = preg_replace('/_([0-9]+)x([0-9]+)/', '' , $externalLink);
         $externalLink = preg_replace('/(https:\/\/i1)/', 'https://i' , $externalLink);
 
-        dump($externalLink);
-        $external_image = file_get_contents($externalLink);
+        // dump($externalLink);
+        $external_image = @file_get_contents($externalLink);
         $imageName = $this->generateRandomString();
         
         if ($resize) {
@@ -254,9 +254,15 @@ class AutoCrawlController extends Controller
             // echo $image->getAttribute('src');
             $imageUrl = $image->getAttribute('src');
             // dump($imageUrl);
-            $imageName = 'upload/' . $this->saveExternalImageToDisk($imageUrl);
+            if ($this->checkRemoteFile($imageUrl)) {
+                $imageName = 'upload/' . $this->saveExternalImageToDisk($imageUrl);
+                $retContent = str_replace($imageUrl, $imageName, $retContent);
+            } else {
+                $retContent = str_replace($imageUrl, '', $retContent);
+            }
+            
             // dump($imageName);
-            $retContent = str_replace($imageUrl, $imageName, $retContent);
+            
         }
         return $retContent;
     }

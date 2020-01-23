@@ -15,6 +15,6 @@ yarn-error.log
 /node_crawler/node_modules
 /template
 
-/public/upload/crawledData
-/public/upload/images
-/public/upload/thumb_images
+/public/upload/crawledData/*
+/public/upload/images/*
+/public/upload/thumb_images/*
