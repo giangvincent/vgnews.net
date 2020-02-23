@@ -118,11 +118,13 @@ class AutoCrawlController extends Controller
                     $post->title = $d['title'];
                     $post->slug = $d['slug'];
                     $post->description = isset($d['description']) ? $d['description'] : '';
-                    $post->content = $this->extractContentImage($d['content']);
+                    $post->content = $d['content'];
+                    // $post->content = $this->extractContentImage($d['content']);
                     // dd($this->extractContentImage($d['content']));
-                    $imageName = $this->saveExternalImageToDisk($d['image'] , true);
+                    // $imageName = $this->saveExternalImageToDisk($d['image'] , true);
 
-                    $post->media = $imageName;
+                    // $post->media = $imageName;
+                    $post->media = $d['image'];
                     // TODO: Save image to folder first on php side
                     // TODO : check high defintion Image on php side
                     $post->source_link = $d['link'];
